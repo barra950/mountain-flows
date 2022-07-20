@@ -552,4 +552,8 @@ plt.show()
 W=W.real
 V=V.real
 
-plt.streamplot(Y,Z,V,W,density = 4)
+vels = (W**2 + V**2)**0.5
+lw = 3*vels/np.amax(vels) + 0.5
+
+
+plt.streamplot(Y,Z,V,W,density = 5,arrowstyle='->',arrowsize = 1.5,linewidth=lw)
