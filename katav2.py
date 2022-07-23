@@ -529,6 +529,62 @@ plt.ylim([0,1000])
 plt.show()
 
 
+#Calculating the streamlines 
+#z = np.arange(0,2010,10) 
+#y = np.arange(-5000,5050,50) 
+Y,Z = np.meshgrid(y,z)
+psi = np.ones_like(Y)*[0]
+
+
+for k in range(-K,K+1):
+    
+    R = 2 * N**2 * np.cos(alpha)**2 / (visc * diff) * (k * np.pi / L)**2
+
+    Q = N**2 * np.sin(alpha)**2 / (3 * visc * diff)
+        
+    S1 = abs(R + np.sqrt(Q**3 + R**2) )**(1/3)
+    S2 = - abs( np.sqrt(Q**3 + R**2) -R )**(1/3)
+        
+    phi = np.sqrt(S1**2 + S2**2 - S1*S2)
+    Lk = np.arccos(- (S1 + S2)/ (2 * phi) )
+        
+    m1 = - np.sqrt(S1 + S2)
+    m2 = -np.sqrt(phi) * np.exp(1j * Lk/2)
+    m3 = m2.conjugate()
+    
+    if k != 0:
+        psi = psi - np.tan(alpha) * 1j*L* Eq[Eqi.index(k)] / (2*k*np.pi) * np.exp(2j * (k) * np.pi * Y / L) + Eq[Eqi.index(0)] * Y * np.tan(alpha) - np.cos(alpha)/visc * 2j*k*np.pi/L *  ( Ak[Aki.index(k)]*np.exp(m1*Z)/(m1**4) + Ck[Cki.index(k)]*np.exp(m2*Z)/(m2**4)  + Dk[Dki.index(k)]*np.exp(m3*Z)/(m3**4) ) * np.exp(2j * (k) * np.pi * Y / L)
+    
+
+for k in range(0,psi.shape[0]):
+    for t in range(0,psi.shape[1]):
+        if Z[k][t] < H(Y[k][t]):
+            psi[k][t] = np.nan
+        if Z[k][t] == H(Y[k][t]):
+            print (psi[k][t], "psi value at ground")
+#        if abs(Z[k][t] - H(Y[k][t])) < 0.1:
+#            if psi[k][t] > 0.1:
+#                print (psi[k][t],'fudeu geral -------------------------------------------------')
+##            print (psi[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
+
+
+##Plotting the V wind
+fig = plt.figure(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+plt.title('Streamfunction')
+#plt.contourf(Y,Z,psi,np.arange(-300,305,5),cmap='seismic')
+CS = plt.contour(Y,Z,psi,15,colors='k')
+plt.clabel(CS, fontsize=9, inline=True)
+#plt.colorbar(label='m/s')
+plt.contourf(Y,Z,U,np.arange(-100000,110000,10000),cmap='seismic')
+#plt.contourf(Y,Z,psi,cmap='seismic')
+plt.xlabel("Y axis")
+plt.ylabel("Height")
+plt.xlim([-5000,5000])
+#plt.ylim([1000,10000])
+plt.show()
+
+
 #%%
 #Calculating some equations
 
