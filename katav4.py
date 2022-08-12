@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 #Solving the equations for the Prandtl case
 
-K = 20
+K = 100
 alpha = 0.1 
 visc = 5  
 diff = 5   
@@ -19,7 +19,7 @@ tick = 10
 points = np.arange(0,L/2+tick,tick)
 
 def H(y):
-    return ( 250 * (1 + np.cos(2 * np.pi * y/L)) )
+    return ( 200 * (1 + np.cos(2 * np.pi * y/L)) )
     #return 0
 #    return 700 * 2 * abs(y) / L
 
@@ -197,7 +197,7 @@ Ak = np.array(Ak)
 
 #Getting the Buoyancy value
 z = np.arange(0,2010,10) 
-y = np.arange(-5000,5050,10) 
+y = np.arange(-L,L+10,10) 
 Y,Z = np.meshgrid(y,z)
 B = np.ones_like(Y)*[0]
 
@@ -246,8 +246,13 @@ plt.contourf(Y,Z,B,np.arange(-0.2,0.201,0.001),cmap='seismic')
 plt.colorbar(label='1/s')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-#plt.ylim([1000,10000])        
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'buoyancy.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()        
 
 
 
@@ -299,9 +304,13 @@ plt.contourf(Y,Z,V,np.arange(-7,7.05,0.05),cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-#plt.ylim([1000,10000])
-plt.show()
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'Vwind.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
 
@@ -405,19 +414,26 @@ for k in range(0,U.shape[0]):
                 print (U[k][t],'fudeu geral -------------------------------------------------')
 #            print (U[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
 
+#U for prandtl case:
+#Up = -Bsfc(Y)/N * np.sqrt(diff/visc) * np.exp(-Z * np.sqrt(N * np.sin(alpha) ) / (4*visc*diff)**(1/4) ) * np.sin(np.sqrt(N*np.sin(alpha)) /((4*visc*diff)**(1/4))*Z )
+
 
 #Plotting the U wind
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
 plt.title('U Wind')
-plt.contourf(Y,Z,U,np.arange(-10,10.1,0.1),cmap='seismic')
+plt.contourf(Y,Z,U,np.arange(-13,14,1),cmap='seismic')
 #plt.contourf(Y,Z,U,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-#plt.ylim([1000,10000])
-plt.show()
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'Uwind.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
 
@@ -472,9 +488,13 @@ plt.contourf(Y,Z,W,np.arange(-4,4.1,0.1),cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-#plt.ylim([1000,10000])
-plt.show()
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'Wwind.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
 
@@ -519,14 +539,19 @@ for k in range(0,P.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('Pressure')
-plt.contourf(Y,Z,P,np.arange(-4,4.1,0.1),cmap='seismic')
+plt.contourf(Y,Z,P,np.arange(-15,15.1,0.1),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
 plt.colorbar(label='hPa')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-plt.ylim([0,1000])
+#plt.xlim([-10000,10000])
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'pressure.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
 plt.show()
+plt.close()
 
 
 #Calculating the streamlines 
@@ -572,7 +597,7 @@ V=V.real
 W=W.real
 
 ##Plotting the streamlines
-fig = plt.figure(figsize=(10,10)) 
+fig = plt.figure(figsize=(20,20)) 
 plt.rcParams.update({'font.size':16})
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 #plt.title('Streamfunction')
@@ -589,13 +614,15 @@ jk = 20
 #plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-5000,5000])
+#plt.xlim([-5000,5000])
+plt.xlim([-L,L])
 plt.ylim([0,1500])
-plt.show()
 plt.subplots_adjust(bottom=0.07, top=0.99, hspace=0.1,right=0.99,left=0.05)
-fig.show()
-
-
+nameoffigure = 'streamlines.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 #Calculating the U* and plotting it  
 Ustar = np.ones_like(y)*[0]
@@ -613,12 +640,15 @@ fig.add_subplot(2,1,1)
 plt.plot(y,Ustar)
 plt.xlabel("Y axis $(m)$")
 plt.ylabel("U$^{\u2605}_\infty$ ($ms^{-1}$)")
-plt.xlim([-5000,5000])
-plt.ylim([-6,2])
+#plt.xlim([-5000,5000])
+plt.xlim([-L,L])
+#plt.ylim([-6,2])
+plt.ylim([-9,5])
 plt.grid('True')
 
 fig.add_subplot(2,1,2)
-CS = plt.contour(Y,Z,psi,50,colors='k')
+#CS = plt.contour(Y,Z,psi,50,colors='k')
+CS = plt.contour(Y,Z,psi,30,colors='k')
 #plt.clabel(CS, fontsize=9, inline=True)
 #plt.colorbar(label='m/s')
 plt.contourf(Y,Z,U,np.arange(-100000,110000,10000),cmap='seismic')
@@ -629,10 +659,14 @@ jk = 20
 #plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
 plt.xlabel("Y axis $(m)$")
 plt.ylabel("Height $(m)$")
-plt.xlim([-5000,5000])
+#plt.xlim([-5000,5000])
+plt.xlim([-L,L])
 plt.ylim([0,1500])
-
-plt.show()
+nameoffigure = 'Ustar.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
 
@@ -1023,7 +1057,7 @@ Ek = np.array(Ek)
 
 #Getting the Buoyancy value
 z = np.arange(0,2010,10) 
-y = np.arange(-5000,5010,10) 
+y = np.arange(-L,L+10,10) 
 Y,Z = np.meshgrid(y,z)
 B = np.ones_like(Y)*[0]
 
@@ -1071,9 +1105,13 @@ plt.contourf(Y,Z,B,np.arange(-0.2,0.201,0.001),cmap='seismic')
 plt.colorbar(label='1/s')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-#plt.ylim([1000,10000])  
-
+plt.xlim([-L,L])
+plt.ylim([0,1500])  
+nameoffigure = 'buoyancy.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
 #Getting the value of the V wind
@@ -1138,9 +1176,13 @@ plt.contourf(Y,Z,V,np.arange(-7,7.05,0.05),cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-#plt.ylim([1000,10000])
-plt.show()  
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'Vwind.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()  
 
 
 #Getting the value of the U wind
@@ -1253,9 +1295,13 @@ plt.contourf(Y,Z,U,np.arange(-10,10.1,0.1),cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-#plt.ylim([1000,10000])
-plt.show()
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'Uwind.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
 
@@ -1310,9 +1356,13 @@ plt.contourf(Y,Z,W,np.arange(-4,4.1,0.1),cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-#plt.ylim([1000,10000])
-plt.show()
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'Wwind.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
 
@@ -1364,9 +1414,13 @@ plt.contourf(Y,Z,P,np.arange(-4,4.1,0.1),cmap='seismic')
 plt.colorbar(label='hPa')
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-10000,10000])
-plt.ylim([0,1000])
-plt.show()
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'pressure.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
 
@@ -1446,11 +1500,61 @@ jk = 20
 #plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
 plt.xlabel("Y axis")
 plt.ylabel("Height")
-plt.xlim([-5000,5000])
+plt.xlim([-L,L])
 plt.ylim([0,1500])
 plt.show()
 plt.subplots_adjust(bottom=0.07, top=0.99, hspace=0.1,right=0.99,left=0.05)
-fig.show()
+nameoffigure = 'streamlines.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
+
+
+#Calculating the U* and plotting it  
+Ustar = np.ones_like(y)*[0]
+for k in range(-K,K+1):
+    Ustar = Ustar +  1j*Eq[Eqi.index(k)] * np.sin(2 * (k) * np.pi * y / L)/np.cos(alpha)
+
+
+##Plotting U* and streamlines
+fig = plt.figure(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+
+
+fig.add_subplot(2,1,1)
+#plt.title('U star plot')
+plt.plot(y,Ustar)
+plt.xlabel("Y axis $(m)$")
+plt.ylabel("U$^{\u2605}_\infty$ ($ms^{-1}$)")
+#plt.xlim([-5000,5000])
+plt.xlim([-L,L])
+#plt.ylim([-6,2])
+plt.ylim([-9,5])
+plt.grid('True')
+
+fig.add_subplot(2,1,2)
+#CS = plt.contour(Y,Z,psi,50,colors='k')
+CS = plt.contour(Y,Z,psi,30,colors='k')
+#plt.clabel(CS, fontsize=9, inline=True)
+#plt.colorbar(label='m/s')
+plt.contourf(Y,Z,U,np.arange(-100000,110000,10000),cmap='seismic')
+#plt.contourf(Y,Z,psi,cmap='seismic')
+#jk = 20
+#q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
+#plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
+#plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
+plt.xlabel("Y axis $(m)$")
+plt.ylabel("Height $(m)$")
+#plt.xlim([-5000,5000])
+plt.xlim([-L,L])
+plt.ylim([0,1500])
+nameoffigure = 'Ustar.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig(r'C:/Users/Owner/OneDrive - University of Oklahoma/Computer/aka g/Meteorology/katabatic flows/output/'+string_in_string)
+#plt.show()
+plt.close()
+
 
 
 #Getting Vinfinity
