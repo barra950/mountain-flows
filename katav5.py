@@ -1223,8 +1223,8 @@ Ek = np.array(Ek)
 
 
 #Getting the Buoyancy value
-z = np.arange(0,2010,1) 
-y = np.arange(-L,L+10,1) 
+z = np.arange(0,2010,10) 
+y = np.arange(-L,L+10,10) 
 Y,Z = np.meshgrid(y,z)
 B = np.ones_like(Y)*[0]
 
