@@ -80,7 +80,7 @@ def lu_solve(A, b):
 
 #Solving the equations for the Prandtl case
 
-K = 70
+K = 20
 alpha = np.longdouble(0.1) 
 visc = np.longdouble(5)     
 diff = np.longdouble(5)     
@@ -318,7 +318,7 @@ Bp = Bsfc(Y) * np.exp(-Z * np.sqrt(N * np.sin(alpha) ) / (4*visc*diff)**(1/4) ) 
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
 plt.title('Buoyancy')
-plt.contourf(Y,Z,B,np.arange(-0.2,0.201,0.001),cmap='seismic')
+plt.contourf(Y,Z,B,np.arange(-0.2,0.21,0.01),cmap='seismic')
 #plt.contourf(Y,Z,B,cmap='seismic')
 plt.colorbar(label='1/s')
 plt.xlabel("Y axis")
@@ -376,7 +376,7 @@ for k in range(0,V.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('V Wind')
-plt.contourf(Y,Z,V,np.arange(-7,7.05,0.05),cmap='seismic')
+plt.contourf(Y,Z,V,np.arange(-7,7.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,V,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
@@ -558,7 +558,7 @@ for k in range(0,W.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('W Wind')
-plt.contourf(Y,Z,W,np.arange(-4,4.1,0.1),cmap='seismic')
+plt.contourf(Y,Z,W,np.arange(-4,4.2,0.2),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
@@ -614,7 +614,7 @@ for k in range(0,P.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('Pressure')
-plt.contourf(Y,Z,P,np.arange(-15,15.1,0.1),cmap='seismic')
+plt.contourf(Y,Z,P,np.arange(-4,4.2,0.2),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
 plt.colorbar(label='hPa')
 plt.xlabel("Y axis")
@@ -1042,7 +1042,7 @@ tick = 10
 points = np.arange(0,L/2+tick,tick)
 
 def H(y):
-    return np.longdouble(( 100 * (1 + np.cos(2 * np.longdouble(np.pi) * y/L)) ))   
+    return np.longdouble(( 300 * (1 + np.cos(2 * np.longdouble(np.pi) * y/L)) ))   
     #return 0
 #    return 700 * 2 * abs(y) / L
 
@@ -1229,9 +1229,9 @@ Y,Z = np.meshgrid(y,z)
 B = np.ones_like(Y)*[0]
 
 for k in range(-K,K+1):
-    
+        
     R = 2 * N**2 * np.cos(alpha)**2 / (visc * diff) * (k * np.pi / L)**2
-
+    
     Q = N**2 * np.sin(alpha)**2 / (3 * visc * diff)
         
     S1 = abs(R + np.sqrt(Q**3 + R**2) )**(1/3)
@@ -1267,7 +1267,7 @@ for k in range(0,B.shape[0]):
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
 plt.title('Buoyancy')
-plt.contourf(Y,Z,B,np.arange(-0.2,0.201,0.001),cmap='seismic')
+plt.contourf(Y,Z,B,np.arange(-0.2,0.21,0.01),cmap='seismic')
 #plt.contourf(Y,Z,B,cmap='seismic')
 plt.colorbar(label='1/s')
 plt.xlabel("Y axis")
@@ -1338,7 +1338,7 @@ for k in range(0,V.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('V Wind')
-plt.contourf(Y,Z,V,np.arange(-7,7.05,0.05),cmap='seismic')
+plt.contourf(Y,Z,V,np.arange(-7,7.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,V,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
@@ -1457,7 +1457,7 @@ for k in range(0,U.shape[0]):
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
 plt.title('U Wind')
-plt.contourf(Y,Z,U,np.arange(-10,10.1,0.1),cmap='seismic')
+plt.contourf(Y,Z,U,np.arange(-10,10.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,U,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
@@ -1518,7 +1518,7 @@ for k in range(0,W.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('W Wind')
-plt.contourf(Y,Z,W,np.arange(-4,4.1,0.1),cmap='seismic')
+plt.contourf(Y,Z,W,np.arange(-4,4.2,0.2),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
@@ -1576,7 +1576,7 @@ for k in range(0,P.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('Pressure')
-plt.contourf(Y,Z,P,np.arange(-4,4.1,0.1),cmap='seismic')
+plt.contourf(Y,Z,P,np.arange(-4,4.2,0.2),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
 plt.colorbar(label='hPa')
 plt.xlabel("Y axis")
@@ -1761,19 +1761,23 @@ for k in range(-K,K+1):
 
 #Testing whether V integral is constant with height
 Vintegral = []
-Hmax = 200
+Hmax = 600
 for k in range(0,len(V)):
     if Z[k][0] > Hmax:
         Vsum = 0
         for t in range(0,len(V[0])):
-            if Y[k][t] >= -L/2 and Y[k][t] <= L/2:
-                Vsum = Vsum + V[k][t]
+            if (Y[k][t] >= -L/2 and Y[k][t] <= L/2):
+                Vsum = Vsum + V[k][t]*abs(Y[0][0]-Y[0][1])
         Vintegral.append(Vsum)
-        # print (Z[k][t])
+        #print (Z[k][0])
 print ("Max and min values of Vintegral", np.amax( Vintegral), np.amin( Vintegral))
 
+jato=10
+for k in range(0,len(Vintegral)):
+    print(Vintegral[k].real,600+jato,"m" )
+    jato = jato + 10
 
-
+ 
 
 
 #%%
