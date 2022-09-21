@@ -197,8 +197,8 @@ Ak = np.array(Ak)
 #%%    
 #Getting the Buoyancy value
 
-z = np.arange(0,2020,5) 
-y = np.arange(-float(L),float(L)+5,5) 
+z = np.arange(0,2010,10) 
+y = np.arange(-float(L),float(L)+10,10) 
 Y,Z = np.meshgrid(y,z)
 Y = Y * mpf(1)
 Z = Z * mpf(1)
@@ -453,21 +453,257 @@ plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 #plt.show()
 plt.close()
 
+#PLotting the W wind
+#z = np.arange(0,2010,10) 
+#y = np.arange(-5000,5050,50) 
+#Y,Z = np.meshgrid(y,z)
+W = np.ones_like(Y)*[mpf(0)]
+
+
+for k in range(-K,K+1):
     
+    R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+    
+    Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+    
+    S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+    S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+    
+    phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+    Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+    
+    m1 = - mp.sqrt(S1 + S2)
+    m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+    m3 = mp.conj(m2)
+    
+    
+    for i in range(0,len(Y)):
+        for t in range(0,len(Y[0])):
+            if k != 0:
+                W[i][t] = W[i][t] + mp.cos(alpha)/visc * mpf(4)*mpf(k)**2 *pizao**2 / L**2 * (Ak[Aki.index(k)]*mp.exp(m1*Z[i][t])/(m1**4) + Ck[Cki.index(k)]*mp.exp(m2*Z[i][t])/(m2**4)  + Dk[Dki.index(k)]*mp.exp(m3*Z[i][t])/(m3**4)   ) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L) +  mp.tan(alpha)*(Eq[Eqi.index(k)] * mp.cos(mpf(2) * mpf(k) * pizao * Y[i][t] / L) )
+            else:
+                W[i][t] = W[i][t] + mp.tan(alpha)*(Eq[Eqi.index(k)] * mp.cos(mpf(2) * mpf(k) * pizao * Y[i][t] / L) )
+        
+
+
+for k in range(0,W.shape[0]):
+    for t in range(0,W.shape[1]):
+        if Z[k][t] < H(Y[k][t]):
+            W[k][t] = np.nan
+        if Z[k][t] == H(Y[k][t]):
+            print (W[k][t], "W value at ground")
+#         if abs(Z[k][t] - H(Y[k][t])) < 0.1:
+#             if W[k][t] > 0.1:
+#                 print (W[k][t],'fudeu geral -------------------------------------------------')
+# #            print (W[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
+
+Yplot,Zplot = np.meshgrid(y,z)
+Wplot = np.ones_like(W)*[mpf(0)]
+for k in range(0,len(W)):
+    for t in range(0,len(W[0])):
+        Wplot[k][t] = float(W[k][t].real) #+ 1j*float(B[k][t].imag)
+        # if B[k][t].real < 0 and abs(B[k][t].real) > 0.1:
+        #     print(B[k][t].real)   
+
+        
+##Plotting the W wind
+fig = plt.figure(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+plt.title('W Wind')
+plt.contourf(Yplot,Zplot,Wplot,np.arange(-6,6.2,0.2),cmap='seismic')
+#plt.contourf(Y,Z,W,cmap='seismic')
+plt.colorbar(label='m/s')
+plt.xlabel("Y axis")
+plt.ylabel("Height")
+plt.xlim([float(-L),float(L)])
+plt.ylim([0,1500])
+nameoffigure = 'Wwind.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+#plt.show()
+plt.close()
+
+
+
+#Now, we need to get the values of the pressure 
+#z = np.arange(0,2010,10) 
+#y = np.arange(-5000,5050,50) 
+#Y,Z = np.meshgrid(y,z)
+P = np.ones_like(Y)*[mpf(0)]
+
+
+for k in range(-K,K+1):
+    
+    R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+    
+    Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+    
+    S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+    S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+    
+    phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+    Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+    
+    m1 = - mp.sqrt(S1 + S2)
+    m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+    m3 = mp.conj(m2)
+    
+    for i in range(0,len(Y)):
+        for t in range(0,len(Y[0])):
+            if k != 0:
+                P[i][t] = P[i][t] + mp.cos(alpha) * Ak[Aki.index(k)] / m1 * mp.exp(m1*Z[i][t]) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)
+            P[i][t] = P[i][t] + mp.cos(alpha) * (Ck[Cki.index(k)] / m2 * mp.exp(m2*Z[i][t]) + Dk[Dki.index(k)] / m3 * mp.exp(m3*Z[i][t])) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)
+
+
+for k in range(0,P.shape[0]):
+    for t in range(0,P.shape[1]):
+        if Z[k][t] < H(Y[k][t]):
+            P[k][t] = np.nan
+        if Z[k][t] == H(Y[k][t]):
+            print (P[k][t], "P value at ground")
+            
+Yplot,Zplot = np.meshgrid(y,z)
+Pplot = np.ones_like(P)*[mpf(0)]
+for k in range(0,len(P)):
+    for t in range(0,len(P[0])):
+        Pplot[k][t] = float(P[k][t].real) #+ 1j*float(B[k][t].imag)
+        # if B[k][t].real < 0 and abs(B[k][t].real) > 0.1:
+        #     print(B[k][t].real)
+        
+            
+
+##Plotting the pressure
+fig = plt.figure(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+plt.title('Pressure')
+plt.contourf(Yplot,Zplot,Pplot,np.arange(-15,15.5,0.5),cmap='seismic')
+#plt.contourf(Y,Z,P,cmap='seismic')
+plt.colorbar(label='hPa')
+plt.xlabel("Y axis")
+plt.ylabel("Height")
+#plt.xlim([-10000,10000])
+plt.xlim([float(-L),float(L)])
+plt.ylim([0,1500])
+nameoffigure = 'pressure.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.show()
+plt.close()
+
+#%%
+#Calculating some equations
+zmp = z * mpf(1)
+du2dz2=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):   
+        du2dz2[k,t] = ( U[k+1,t] - mpf(2)*U[k,t] + U[k-1,t] ) / abs(zmp[k]-zmp[k+1])**2
+
+term1 = -B[1:-1,:]*mp.sin(alpha)
+term2 = visc*du2dz2[1:-1,:]
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum)
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '666666666666666666666666666666666666666666')
+    
+
+########################################################################################################################################################################
+
+zmp = z * mpf(1)
+dv2dz2=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):
+        dv2dz2[k,t] = ( V[k+1,t] - mpf(2)*V[k,t] + V[k-1,t] ) / abs(zmp[k]-zmp[k+1])**2
+
+ymp = y * mpf(1)
+dpdy=np.ones_like(Y)*[mpf(0)]
+for k in range(1,len(y)-1):
+    for t in range(0,len(z)):
+        dpdy[t,k] = ( P[t,k+1] - P[t,k-1] ) / abs(ymp[k-1]-ymp[k+1])
+    
+term1 = -dpdy[1:-1,1:-1]
+term2 = visc*dv2dz2[1:-1,1:-1]
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum)
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '77777777777777777777777777777777777777')   
              
+########################################################################################################################################################################        
+
+zmp = z * mpf(1)        
+dpdz=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):
+        dpdz[k,t] = ( P[k+1,t] - P[k-1,t] ) / abs(zmp[k-1]-zmp[k+1])
+
+term1 = -dpdz[1:-1,:] 
+term2 = B[1:-1,:]*mp.cos(alpha)
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum)
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '99999999999999999999999999999')       
         
+#############################################################################################################################################################        
+
+zmp = z * mpf(1)         
+db2dz2=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):
+        db2dz2[k,t] = ( B[k+1,t] - mpf(2)*B[k,t] + B[k-1,t] ) / abs(zmp[k]-zmp[k+1])**2
+
+term1 = N**2 * (U[1:-1,:]*mp.sin(alpha) - W[1:-1,:]*mp.cos(alpha))
+term2 = diff*db2dz2[1:-1,:]
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum)
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '8888888888888888888888888888888888888' )       
+
+
+#############################################################################################################################################################       
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+ymp = y * mpf(1)       
+dvdy=np.ones_like(Y)*[mpf(0)]
+for k in range(1,len(y)-1):
+    for t in range(0,len(z)):
+        dvdy[t,k] = ( V[t,k+1] - V[t,k-1] ) / abs(ymp[k-1]-ymp[k+1])
+
+zmp = z * mpf(1)    
+dwdz=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):
+        dwdz[k,t] = ( W[k+1,t] - W[k-1,t] ) / abs(zmp[k-1]-zmp[k+1])
+
+
+term1 = dvdy[1:-1,1:-1]
+term2 = dwdz[1:-1,1:-1]  
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum) 
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '55555555555555555555555555555555555555555555555555')        
         
         
         
