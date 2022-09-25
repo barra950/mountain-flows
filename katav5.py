@@ -80,7 +80,7 @@ def lu_solve(A, b):
 
 #Solving the equations for the Prandtl case
 
-K = 20
+K = 70
 alpha = np.longdouble(0.1) 
 visc = np.longdouble(5)     
 diff = np.longdouble(5)     
@@ -93,7 +93,7 @@ tick = 10
 points = np.arange(0,L/2+tick,tick)
 
 def H(y):
-    return np.longdouble(( 300 * (1 + np.cos(2 * np.longdouble(np.pi) * y/L)) ))
+    return np.longdouble(( 200 * (1 + np.cos(2 * np.longdouble(np.pi) * y/L)) ))
     #return 0
 #    return 700 * 2 * abs(y) / L
 
@@ -234,6 +234,7 @@ X = lu_solve(final_system, b)
 
 print (np.allclose(final_system @ X, b))
 
+
 #Getting the values for Ak, Ck and Dk
 strings = []
 
@@ -273,8 +274,9 @@ Ak = np.array(Ak)
 
 
 #Getting the Buoyancy value
+magic_value = 50
 z = np.arange(0,2010,10) 
-y = np.arange(-L,L+10,10) 
+y = np.arange(-L,L+0.1,0.1) 
 Y,Z = np.meshgrid(y,z)
 B = np.ones_like(Y)*[0]
 
@@ -317,12 +319,12 @@ Bp = Bsfc(Y) * np.exp(-Z * np.sqrt(N * np.sin(alpha) ) / (4*visc*diff)**(1/4) ) 
 ##Plotting the buoyancy
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
-plt.title('Buoyancy')
-plt.contourf(Y,Z,B,np.arange(-0.2,0.21,0.01),cmap='seismic')
+plt.title('Buoyancy',y=1.05)
+plt.contourf(Y,Z,B,np.arange(-0.1,0.105,0.005),cmap='seismic')
 #plt.contourf(Y,Z,B,cmap='seismic')
-plt.colorbar(label='1/s')
-plt.xlabel("Y axis")
-plt.ylabel("Height")
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
 plt.xlim([-L,L])
 plt.ylim([0,1500])
 nameoffigure = 'buoyancy.png'
@@ -330,7 +332,6 @@ string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 #plt.show()
 plt.close()        
-
 
 
 #Getting the value of the V wind
@@ -498,7 +499,7 @@ for k in range(0,U.shape[0]):
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
 plt.title('U Wind')
-plt.contourf(Y,Z,U,np.arange(-13,14,1),cmap='seismic')
+plt.contourf(Y,Z,U,np.arange(-25,26,1),cmap='seismic')
 #plt.contourf(Y,Z,U,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
@@ -558,7 +559,7 @@ for k in range(0,W.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('W Wind')
-plt.contourf(Y,Z,W,np.arange(-4,4.2,0.2),cmap='seismic')
+plt.contourf(Y,Z,W,np.arange(-6,6.2,0.2),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
@@ -614,7 +615,7 @@ for k in range(0,P.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('Pressure')
-plt.contourf(Y,Z,P,np.arange(-4,4.2,0.2),cmap='seismic')
+plt.contourf(Y,Z,P,np.arange(-15,15.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
 plt.colorbar(label='hPa')
 plt.xlabel("Y axis")
@@ -719,7 +720,7 @@ plt.ylabel("U$^{\u2605}_\infty$ ($ms^{-1}$)")
 #plt.xlim([-5000,5000])
 plt.xlim([-L,L])
 #plt.ylim([-6,2])
-plt.ylim([-9,5])
+plt.ylim([-18,10])
 plt.grid('True')
 
 fig.add_subplot(2,1,2)
@@ -747,16 +748,87 @@ plt.close()
 
 #Testing whether V integral is constant with height
 Vintegral = []
-Hmax = 600
+Hmax = 400
 for k in range(0,len(V)):
     if Z[k][0] > Hmax:
         Vsum = 0
         for t in range(0,len(V[0])):
-            if Y[k][t] >= -L/2 and Y[k][t] <= L/2:
-                Vsum = Vsum + V[k][t]
+            if (Y[k][t] >= -L/2 and Y[k][t] <= L/2):
+                Vsum = Vsum + V[k][t]*abs(Y[0][0]-Y[0][1])
         Vintegral.append(Vsum)
-        # print (Z[k][t])
+        #print (Z[k][0])
 print ("Max and min values of Vintegral", np.amax( Vintegral), np.amin( Vintegral))
+
+jato=10
+for k in range(0,len(Vintegral)):
+    print(Vintegral[k].real,400+jato,"m" )
+    jato = jato + 10
+    
+    
+#Testing whether W integral is constant with height
+Wintegral = []
+for k in range(0,len(W)):
+    if Z[k][0] > Hmax:
+        Wsum = 0
+        for t in range(0,len(W[0])):
+            if (Y[k][t] >= -L/2 and Y[k][t] <= L/2):
+                Wsum = Wsum + W[k][t]*abs(Y[0][0]-Y[0][1])
+        Wintegral.append(Wsum)
+        #print (Z[k][0])
+print ("Max and min values of Wintegral", np.amax( Wintegral), np.amin( Wintegral))
+
+jato=10
+for k in range(0,len(Wintegral)):
+    print(Wintegral[k].real,400+jato,"m" )
+    jato = jato + 10
+    
+
+#Testing whether Ustar integral is constant with height
+Ustsum = 0
+for t in range(0,len(y)):
+    if (y[t] >= -L/2 and y[t] <= L/2):
+        Ustsum = Ustsum + Ustar[t]*abs(y[0]-y[1])
+print ("Ustar integral value", Ustsum)
+
+
+#Getting the U integral
+Uintegral = []
+integralZ = []
+for k in range(0,len(U)):
+    if Z[k][0] > Hmax:
+        Usum = 0
+        for t in range(0,len(U[0])):
+            if (Y[k][t] >= -L/2 and Y[k][t] <= L/2):
+                Usum = Usum + U[k][t]*abs(Y[0][0]-Y[0][1])
+        Uintegral.append(Usum)
+        integralZ.append(z[k])
+        #print (Z[k][0])
+print ("Max and min values of Uintegral", np.amax( Uintegral), np.amin( Uintegral))
+
+#Getting the B integral
+Bintegral = []
+for k in range(0,len(B)):
+    if Z[k][0] > Hmax:
+        Bsum = 0
+        for t in range(0,len(B[0])):
+            if (Y[k][t] >= -L/2 and Y[k][t] <= L/2):
+                Bsum = Bsum + B[k][t]*abs(Y[0][0]-Y[0][1])
+        Bintegral.append(Bsum)
+        #print (Z[k][0])
+print ("Max and min values of Bintegral", np.amax( Bintegral), np.amin( Bintegral))
+
+jato=10
+for k in range(0,len(Vintegral)):
+    print(Vintegral[k].real,400+jato,"m" )
+    jato = jato + 10
+
+#Testing wether C is a constant
+Uintegral = np.array(Uintegral)
+integralZ = np.array(integralZ)
+Bintegral = np.array(Bintegral)
+delta = (4*visc*diff)**(1/4) / np.sqrt(N * np.sin(alpha))
+Cconst = np.sqrt( np.exp(2 * integralZ/delta) * (Bintegral**2 + (visc/diff) * N**2 * Uintegral**2 ) )
+
 
 
 #%%
@@ -1028,7 +1100,7 @@ def lu_solve(A, b):
 
 #Solving the equations for the Prandtl case
 
-K = 20
+K = 70
 alpha = np.longdouble(0.1) 
 visc = np.longdouble(5)     
 diff = np.longdouble(5)     
@@ -1042,7 +1114,7 @@ tick = 10
 points = np.arange(0,L/2+tick,tick)
 
 def H(y):
-    return np.longdouble(( 300 * (1 + np.cos(2 * np.longdouble(np.pi) * y/L)) ))   
+    return np.longdouble(( 200 * (1 + np.cos(2 * np.longdouble(np.pi) * y/L)) ))   
     #return 0
 #    return 700 * 2 * abs(y) / L
 
@@ -1457,7 +1529,7 @@ for k in range(0,U.shape[0]):
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
 plt.title('U Wind')
-plt.contourf(Y,Z,U,np.arange(-10,10.5,0.5),cmap='seismic')
+plt.contourf(Y,Z,U,np.arange(-25,26,1),cmap='seismic')
 #plt.contourf(Y,Z,U,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
@@ -1518,7 +1590,7 @@ for k in range(0,W.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('W Wind')
-plt.contourf(Y,Z,W,np.arange(-4,4.2,0.2),cmap='seismic')
+plt.contourf(Y,Z,W,np.arange(-6,6.2,0.2),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 plt.colorbar(label='m/s')
 plt.xlabel("Y axis")
@@ -1576,7 +1648,7 @@ for k in range(0,P.shape[0]):
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('Pressure')
-plt.contourf(Y,Z,P,np.arange(-4,4.2,0.2),cmap='seismic')
+plt.contourf(Y,Z,P,np.arange(-15,15.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
 plt.colorbar(label='hPa')
 plt.xlabel("Y axis")
@@ -1697,7 +1769,7 @@ plt.ylabel("U$^{\u2605}_\infty$ ($ms^{-1}$)")
 #plt.xlim([-5000,5000])
 plt.xlim([-L,L])
 #plt.ylim([-6,2])
-plt.ylim([-9,5])
+plt.ylim([-18,10])
 plt.grid('True')
 
 fig.add_subplot(2,1,2)
@@ -1761,7 +1833,7 @@ for k in range(-K,K+1):
 
 #Testing whether V integral is constant with height
 Vintegral = []
-Hmax = 600
+Hmax = 400
 for k in range(0,len(V)):
     if Z[k][0] > Hmax:
         Vsum = 0
@@ -1774,8 +1846,67 @@ print ("Max and min values of Vintegral", np.amax( Vintegral), np.amin( Vintegra
 
 jato=10
 for k in range(0,len(Vintegral)):
-    print(Vintegral[k].real,600+jato,"m" )
+    print(Vintegral[k].real,400+jato,"m" )
     jato = jato + 10
+    
+    
+Wintegral = []
+for k in range(0,len(W)):
+    if Z[k][0] > Hmax:
+        Wsum = 0
+        for t in range(0,len(W[0])):
+            if (Y[k][t] >= -L/2 and Y[k][t] <= L/2):
+                Wsum = Wsum + W[k][t]*abs(Y[0][0]-Y[0][1])
+        Wintegral.append(Wsum)
+        #print (Z[k][0])
+print ("Max and min values of Wintegral", np.amax( Wintegral), np.amin( Wintegral))
+
+jato=10
+for k in range(0,len(Wintegral)):
+    print(Wintegral[k].real,400+jato,"m" )
+    jato = jato + 10
+    
+#Testing whether Ustar integral is constant with height
+Ustsum = 0
+for t in range(0,len(y)):
+    if (y[t] >= -L/2 and y[t] <= L/2):
+        Ustsum = Ustsum + Ustar[t]*abs(y[0]-y[1])
+print ("Ustar integral value", Ustsum)
+
+
+#Getting the U integral
+Uintegral = []
+integralZ = []
+for k in range(0,len(U)):
+    if Z[k][0] > Hmax:
+        Usum = 0
+        for t in range(0,len(U[0])):
+            if (Y[k][t] >= -L/2 and Y[k][t] <= L/2):
+                Usum = Usum + U[k][t]*abs(Y[0][0]-Y[0][1])
+        Uintegral.append(Usum)
+        integralZ.append(z[k])
+        #print (Z[k][0])
+print ("Max and min values of Uintegral", np.amax( Uintegral), np.amin( Uintegral))
+
+#Getting the B integral
+Bintegral = []
+for k in range(0,len(B)):
+    if Z[k][0] > Hmax:
+        Bsum = 0
+        for t in range(0,len(B[0])):
+            if (Y[k][t] >= -L/2 and Y[k][t] <= L/2):
+                Bsum = Bsum + B[k][t]*abs(Y[0][0]-Y[0][1])
+        Bintegral.append(Bsum)
+        #print (Z[k][0])
+print ("Max and min values of Bintegral", np.amax( Bintegral), np.amin( Bintegral))
+
+
+#Testing wether C is a constant
+Uintegral = np.array(Uintegral)
+integralZ = np.array(integralZ)
+Bintegral = np.array(Bintegral)
+delta = (4*visc*diff)**(1/4) / np.sqrt(N * np.sin(alpha))
+Cconst = np.sqrt( np.exp(2 * integralZ/delta) * (Bintegral**2 + (visc/diff) * N**2 * Uintegral**2 ) )
 
  
 
