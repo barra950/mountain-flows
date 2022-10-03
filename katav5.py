@@ -276,7 +276,7 @@ Ak = np.array(Ak)
 #Getting the Buoyancy value
 magic_value = 50
 z = np.arange(0,2010,10) 
-y = np.arange(-L,L+0.1,0.1) 
+y = np.arange(-L,L+10,10) 
 Y,Z = np.meshgrid(y,z)
 B = np.ones_like(Y)*[0]
 
@@ -311,7 +311,8 @@ for k in range(0,B.shape[0]):
             if B[k][t] > 0.101:
                 print (B[k][t],'fudeu geral -------------------------------------------------')
 #            print (B[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
-    
+ 
+#Buoyancy for the prandtl case   
 Bp = Bsfc(Y) * np.exp(-Z * np.sqrt(N * np.sin(alpha) ) / (4*visc*diff)**(1/4) ) * np.cos(np.sqrt(N*np.sin(alpha)) /((4*visc*diff)**(1/4))*Z )
 
 
@@ -492,7 +493,7 @@ for k in range(0,U.shape[0]):
 #            print (U[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
 
 #U for prandtl case:
-#Up = -Bsfc(Y)/N * np.sqrt(diff/visc) * np.exp(-Z * np.sqrt(N * np.sin(alpha) ) / (4*visc*diff)**(1/4) ) * np.sin(np.sqrt(N*np.sin(alpha)) /((4*visc*diff)**(1/4))*Z )
+Up = -Bsfc(Y)/N * np.sqrt(diff/visc) * np.exp(-Z * np.sqrt(N * np.sin(alpha) ) / (4*visc*diff)**(1/4) ) * np.sin(np.sqrt(N*np.sin(alpha)) /((4*visc*diff)**(1/4))*Z )
 
 
 #Plotting the U wind
@@ -828,6 +829,27 @@ integralZ = np.array(integralZ)
 Bintegral = np.array(Bintegral)
 delta = (4*visc*diff)**(1/4) / np.sqrt(N * np.sin(alpha))
 Cconst = np.sqrt( np.exp(2 * integralZ/delta) * (Bintegral**2 + (visc/diff) * N**2 * Uintegral**2 ) )
+
+#Plotting the prandtl solution
+Bpplot = np.array(Bp).T
+Upplot = np.array(Up).T
+fig,ax1=plt.subplots()
+#plt.xticks(maxtime, time2plot, rotation='vertical')
+plt.rcParams.update({'font.size':16})
+
+ax1.set_ylim([-0.02,0.1])
+plt.xlabel('Z [m]',name='Arial',size=16,style='italic')
+plt.ylabel('Buoyancy [$ms^{-2}$]',name='Arial',size=16,style='italic')
+plt.plot(z,Bpplot[0][:],linewidth=3,color='b')
+ax1.tick_params('both', length=10, width=1, which='major')
+ax2=ax1.twinx()
+ax2.set_ylim([-4,4])
+plt.plot(z,Upplot[0][:],linewidth=3,color='r')
+plt.ylabel('U wind [$ms^{-1}$]',name='Arial',size=16,style='italic')
+ax1.set_xlim([0,1000])
+ax1.set_xticks(np.arange(0,1100,100))
+ax2.tick_params('both', length=10, width=1, which='major')
+
 
 
 
