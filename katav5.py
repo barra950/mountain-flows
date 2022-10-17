@@ -85,7 +85,7 @@ alpha = np.longdouble(0.1)
 visc = np.longdouble(5)     
 diff = np.longdouble(5)     
 N = np.longdouble(0.01)    
-L = np.longdouble(5000)
+L = np.longdouble(1000)
 
 
 subdivisions = 100
@@ -835,20 +835,61 @@ Bpplot = np.array(Bp).T
 Upplot = np.array(Up).T
 fig,ax1=plt.subplots()
 #plt.xticks(maxtime, time2plot, rotation='vertical')
-plt.rcParams.update({'font.size':16})
+plt.rcParams.update({'font.size':20})
+fsize = 20
 
 ax1.set_ylim([-0.02,0.1])
-plt.xlabel('Z [m]',name='Arial',size=16,style='italic')
-plt.ylabel('Buoyancy [$ms^{-2}$]',name='Arial',size=16,style='italic')
+plt.xlabel('Z [m]',name='Arial',size=fsize)
+plt.ylabel(r'B [$\rmms^{-2}$]',name='Arial',size=fsize)
 plt.plot(z,Bpplot[0][:],linewidth=3,color='b')
 ax1.tick_params('both', length=10, width=1, which='major')
 ax2=ax1.twinx()
 ax2.set_ylim([-4,4])
 plt.plot(z,Upplot[0][:],linewidth=3,color='r')
-plt.ylabel('U wind [$ms^{-1}$]',name='Arial',size=16,style='italic')
+plt.ylabel(r'U [$\rmms^{-1}$]',name='Arial',size=fsize)
 ax1.set_xlim([0,1000])
 ax1.set_xticks(np.arange(0,1100,100))
 ax2.tick_params('both', length=10, width=1, which='major')
+
+#Plotting the theta angle
+#U = U.real
+#W = W.real
+Ustar_real = U * np.cos(alpha) + W * np.sin(alpha)
+Wstar_real = - U * np.sin(alpha) + W * np.cos(alpha)
+theta = np.arccos( abs(Ustar_real / np.sqrt(U**2 + W**2 )))
+fraction = Ustar_real / np.sqrt(U**2 + W**2 )
+theta = theta * 180 / np.pi
+
+
+fig = plt.figure(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+plt.title('Theta')
+plt.contourf(Y,Z,theta,np.arange(0,10.1,0.1),cmap='seismic')
+#plt.contourf(Y,Z,W,cmap='seismic')
+plt.colorbar(label='Degrees')
+plt.xlabel("Y axis")
+plt.ylabel("Height")
+#plt.xlim([-L,L])
+#plt.ylim([0,1500])
+nameoffigure = 'theta.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+#plt.show()
+plt.close()
+
+#Plotting the Ustar_real
+fig = plt.figure(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+plt.title('Ustar')
+plt.contourf(Y,Z,Ustar_real,np.arange(-25,26,1),cmap='seismic')
+#plt.contourf(Y,Z,W,cmap='seismic')
+plt.colorbar(label='m/s')
+plt.xlabel("Y axis")
+plt.ylabel("Height")
+#plt.xlim([-L,L])
+#plt.ylim([0,1500])
+
+
 
 
 
