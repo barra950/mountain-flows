@@ -5,6 +5,7 @@ import numpy as np
 from scipy.linalg import lu , lu_factor, lu_solve
 from scipy.integrate import quad
 import matplotlib.pyplot as plt
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 def lu(A):
     
@@ -275,7 +276,7 @@ Ak = np.array(Ak)
 
 #Getting the Buoyancy value
 magic_value = 50
-z = np.arange(0,2010,10) 
+z = np.arange(0,2002,2) 
 y = np.arange(-L,L+10,10) 
 Y,Z = np.meshgrid(y,z)
 B = np.ones_like(Y)*[0]
@@ -852,8 +853,6 @@ ax1.set_xticks(np.arange(0,1100,100))
 ax2.tick_params('both', length=10, width=1, which='major')
 
 #Plotting the theta angle
-#U = U.real
-#W = W.real
 Ustar_real = U * np.cos(alpha) + W * np.sin(alpha)
 Wstar_real = - U * np.sin(alpha) + W * np.cos(alpha)
 theta = np.arccos( abs(Ustar_real / np.sqrt(U**2 + W**2 )))
@@ -864,7 +863,7 @@ theta = theta * 180 / np.pi
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title('Theta')
-plt.contourf(Y,Z,theta,np.arange(0,10.1,0.1),cmap='seismic')
+plt.contourf(Y,Z,theta,np.arange(0,101,1),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 plt.colorbar(label='Degrees')
 plt.xlabel("Y axis")
@@ -888,6 +887,29 @@ plt.xlabel("Y axis")
 plt.ylabel("Height")
 #plt.xlim([-L,L])
 #plt.ylim([0,1500])
+
+
+#Plotting the theta angle vs height at y=0
+thetaplot = np.array(theta).T
+fig,ax = plt.subplots(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+ax.plot(thetaplot[50][1:],z[1:])
+plt.xlabel("Theta")
+plt.ylabel("Height (m)")
+#plt.xlim([0,5])
+ax.set_ylim([0,1500])
+ax.set_xticks(np.arange(0,5.5,0.5))
+ax.set_yticks(np.arange(0,1600,100))
+ax.tick_params('both', length=10, width=1, which='major')
+
+ax.xaxis.set_minor_locator(MultipleLocator(20))
+ax.minorticks_on()
+ax.yaxis.set_tick_params(which='minor', bottom=False)
+
+
+
+
+
 
 
 
@@ -2142,7 +2164,7 @@ plt.rcParams.update({'font.size':16})
 plt.subplot(2,1,1)
 plt.title('Terms vs sum')
 plt.contourf(Y[1:-1,1:-1],Z[1:-1,1:-1],term1/(abs(term1) + abs(term2)),np.arange(-1,1.05,0.05),cmap='seismic')
-plt.colorbar(label='term1/(term1+term2)')
+plt.colorbar(label='term1/(term1+term2)')   
 plt.xlabel("Y axis")
 plt.ylabel("Height")
 plt.xlim([-5000,5000])
