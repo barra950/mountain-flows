@@ -902,8 +902,9 @@ ax.set_xticks(np.arange(0,5.5,0.5))
 ax.set_yticks(np.arange(0,1600,100))
 ax.tick_params('both', length=10, width=1, which='major')
 
-ax.xaxis.set_minor_locator(MultipleLocator(20))
+
 ax.minorticks_on()
+ax.xaxis.set_minor_locator(AutoMinorLocator(2))
 ax.yaxis.set_tick_params(which='minor', bottom=False)
 
 
