@@ -890,22 +890,33 @@ plt.ylabel("Height")
 
 
 #Plotting the theta angle vs height at y=0
-thetaplot = np.array(theta).T
-fig,ax = plt.subplots(figsize=(10,10)) 
+thetaplot = (np.sign(Ustar_real) * theta).T 
+thetaplot2 = (theta).T
+fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-ax.plot(thetaplot[50][1:],z[1:])
-plt.xlabel("Theta")
+ax1.plot(thetaplot2[50][1:],z[1:],linewidth=3,color="r")
+plt.xlabel(r"$\rm\theta$ ($\rm^{o}$)")
 plt.ylabel("Height (m)")
-#plt.xlim([0,5])
-ax.set_ylim([0,1500])
-ax.set_xticks(np.arange(0,5.5,0.5))
-ax.set_yticks(np.arange(0,1600,100))
-ax.tick_params('both', length=10, width=1, which='major')
+plt.xlim([0,5.25])
+ax1.set_ylim([0,1500])
+ax1.set_xticks(np.arange(0,5.5,0.5))
+ax1.set_yticks(np.arange(0,1600,100))
+ax1.tick_params('both', length=10, width=1, which='major')
 
+ax1.minorticks_on()
+ax1.xaxis.set_minor_locator(AutoMinorLocator(2))
+ax1.yaxis.set_tick_params(which='minor', bottom=False)
 
-ax.minorticks_on()
-ax.xaxis.set_minor_locator(AutoMinorLocator(2))
-ax.yaxis.set_tick_params(which='minor', bottom=False)
+# ax2=ax1.twiny()
+# ax2.plot(thetaplot[100][1:],z[1:],color="r")
+# plt.xlabel("Theta")
+# #plt.xlim([0,5])
+# #ax2.set_xticks(np.arange(-5,0.5,0.5))
+# ax2.tick_params('both', length=10, width=1, which='major')
+
+# ax2.minorticks_on()
+# ax2.xaxis.set_minor_locator(AutoMinorLocator(2))
+# ax2.yaxis.set_tick_params(which='minor', bottom=False)
 
 
 
