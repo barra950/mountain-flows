@@ -590,6 +590,43 @@ plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 plt.show()
 plt.close()
 
+
+#Calculating the U* and plotting it  
+Ustar = np.ones_like(y)*[mpf(0)]
+ympf = y*[mpf(1)]
+for k in range(-K,K+1):
+    for t in range(0,len(y)):
+        Ustar[t] = Ustar[t] +  Eq[Eqi.index(k)] * mp.cos(mpf(2) * mpf(k) * pizao * ympf[t] / L)/mp.cos(alpha)
+        
+#Plotting the theta angle
+Ustar_real = U * mp.cos(alpha) + W * mp.sin(alpha)
+Wstar_real = - U * mp.sin(alpha) + W * mp.cos(alpha)
+theta = np.ones_like(U)*[mpf(0)]
+for k in range(0,len(theta)):
+    for t in range(0,len(theta[0])):
+        theta[k][t] = mp.acos( abs(Ustar_real[k][t] / mp.sqrt(U[k][t]**2 + W[k][t]**2 )))
+theta = theta * mpf(180) / pizao
+
+Yplot,Zplot = np.meshgrid(y,z)
+thetaplot = np.ones_like(theta)*[mpf(0)]
+for k in range(0,len(theta)):
+    for t in range(0,len(theta[0])):
+        thetaplot[k][t] = float(theta[k][t].real) #+ 1j*float(theta[k][t].imag)
+        
+#Plotting the theta angle vs height at y=0 
+thetaplotf = (thetaplot).T
+fig,ax1 = plt.subplots(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+ax1.plot(thetaplotf[50][1:],z[1:],linewidth=3,color="r")
+plt.xlabel(r"$\rm\theta$ ($\rm^{o}$)")
+plt.ylabel("Height (m)")
+plt.xlim([0,6])
+ax1.set_ylim([0,1500])
+ax1.set_xticks(np.arange(0,6.5,0.5))
+ax1.set_yticks(np.arange(0,1600,100))
+ax1.tick_params('both', length=10, width=1, which='major')
+
+
 #%%
 #Calculating some equations
 zmp = z * mpf(1)
