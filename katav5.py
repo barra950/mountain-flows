@@ -276,7 +276,7 @@ Ak = np.array(Ak)
 
 #Getting the Buoyancy value
 magic_value = 50
-z = np.arange(0,2002,2) 
+z = np.arange(0,2010,10) 
 y = np.arange(-L,L+10,10) 
 Y,Z = np.meshgrid(y,z)
 B = np.ones_like(Y)*[0]
@@ -888,24 +888,37 @@ plt.ylabel("Height")
 #plt.xlim([-L,L])
 #plt.ylim([0,1500])
 
+#Plotting the Wstar_real in a 1D plot 
+Wstarplot = (Wstar_real).T
+fig,ax1 = plt.subplots(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+ax1.plot(Wstarplot[50][1:],z[1:],linewidth=3,color="r")
+plt.xlabel("Wstar")
+plt.ylabel("Height (m)")
+#plt.xlim([0,5.25])
+ax1.set_ylim([0,1500])
+ax1.set_yticks(np.arange(0,1600,100))
+plt.xlim([0,0.3])
+
 
 #Plotting the theta angle vs height at y=0
-thetaplot = (np.sign(Ustar_real) * theta).T 
+thetaplot = (np.sign(Wstar_real) * theta).T 
 thetaplot2 = (theta).T
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-ax1.plot(thetaplot2[50][1:],z[1:],linewidth=3,color="r")
+ax1.plot(thetaplot[50][1:],z[1:],linewidth=3,color="r")
 plt.xlabel(r"$\rm\theta$ ($\rm^{o}$)")
 plt.ylabel("Height (m)")
-plt.xlim([0,5.25])
+plt.xlim([-1,5.25])
 ax1.set_ylim([0,1500])
-ax1.set_xticks(np.arange(0,5.5,0.5))
+ax1.set_xticks(np.arange(-1,5.5,0.5))
 ax1.set_yticks(np.arange(0,1600,100))
 ax1.tick_params('both', length=10, width=1, which='major')
 
 ax1.minorticks_on()
 ax1.xaxis.set_minor_locator(AutoMinorLocator(2))
 ax1.yaxis.set_tick_params(which='minor', bottom=False)
+plt.grid(True)
 
 # ax2=ax1.twiny()
 # ax2.plot(thetaplot[100][1:],z[1:],color="r")
