@@ -609,22 +609,26 @@ theta = theta * mpf(180) / pizao
 
 Yplot,Zplot = np.meshgrid(y,z)
 thetaplot = np.ones_like(theta)*[mpf(0)]
+thetaplot_sign = np.ones_like(theta)*[mpf(0)]
 for k in range(0,len(theta)):
     for t in range(0,len(theta[0])):
         thetaplot[k][t] = float(theta[k][t].real) #+ 1j*float(theta[k][t].imag)
+        thetaplot_sign[k][t] = float(theta[k][t].real * abs(Wstar_real[k][t].real)/Wstar_real[k][t].real)
         
 #Plotting the theta angle vs height at y=0 
 thetaplotf = (thetaplot).T
+thetaplotf2 = (thetaplot_sign).T 
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-ax1.plot(thetaplotf[50][1:],z[1:],linewidth=3,color="r")
+ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r")
 plt.xlabel(r"$\rm\theta$ ($\rm^{o}$)")
 plt.ylabel("Height (m)")
-plt.xlim([0,6])
+plt.xlim([-0.5,6])
 ax1.set_ylim([0,1500])
-ax1.set_xticks(np.arange(0,6.5,0.5))
+ax1.set_xticks(np.arange(-0.5,6.5,0.5))
 ax1.set_yticks(np.arange(0,1600,100))
 ax1.tick_params('both', length=10, width=1, which='major')
+plt.grid(True)
 
 
 #%%
