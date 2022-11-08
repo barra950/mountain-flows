@@ -673,6 +673,124 @@ for k in range(-K,K+1):
     for t in range(0,len(y)):
         Ustar[t] = Ustar[t] +  Eq[Eqi.index(k)] * mp.cos(mpf(2) * mpf(k) * pizao * ympf[t] / L)/mp.cos(alpha)
         
+Ustarplot = np.ones_like(Ustar)*[mpf(0)]
+for t in range(0,len(y)):
+    Ustarplot[t] = float(Ustar[t].real)
+
+        
+##Plotting U* and streamlines
+fig = plt.figure(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+
+
+fig.add_subplot(2,1,1)
+#plt.title('U star plot')
+plt.plot(y,Ustarplot)
+plt.xlabel("Y axis $(m)$")
+plt.ylabel("U$^{\u2605}_\infty$ ($ms^{-1}$)")
+#plt.xlim([-5000,5000])
+plt.xlim([float(-L),float(L)])
+#plt.ylim([-6,2])
+plt.ylim([-18,10])
+plt.grid('True')
+
+fig.add_subplot(2,1,2)
+#CS = plt.contour(Y,Z,psi,50,colors='k')
+CS = plt.contour(Yplot,Zplot,psiplot,30,colors='k')
+#plt.clabel(CS, fontsize=9, inline=True)
+#plt.colorbar(label='m/s')
+plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
+#plt.contourf(Y,Z,psi,cmap='seismic')
+#jk = 20
+#q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
+#plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
+#plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
+plt.xlabel("Y axis $(m)$")
+plt.ylabel("Height $(m)$")
+#plt.xlim([-5000,5000])
+plt.xlim([float(-L),float(L)])
+plt.ylim([0,1500])
+nameoffigure = 'Ustar.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+#plt.show()
+plt.close()
+
+
+#Testing whether V integral is constant with height
+Vintegral = []
+Hmax = 500
+for k in range(0,len(V)):
+    if Zplot[k][0] > Hmax:
+        Vsum = 0
+        for t in range(0,len(V[0])):
+            if (Yplot[k][t] >= float(-L/2) and Yplot[k][t] <= float(L/2)):
+                Vsum = Vsum + Vplot[k][t]*abs(Yplot[0][0]-Yplot[0][1])
+        Vintegral.append(Vsum)
+        #print (Z[k][0])
+print ("Max and min values of Vintegral", np.amax( Vintegral), np.amin( Vintegral))
+
+jato=10
+for k in range(0,len(Vintegral)):
+    print(Vintegral[k].real,500+jato,"m" )
+    jato = jato + 10
+    
+
+#Testing whether W integral is constant with height
+Wintegral = []
+for k in range(0,len(W)):
+    if Zplot[k][0] > Hmax:
+        Wsum = 0
+        for t in range(0,len(Wplot[0])):
+            if (Yplot[k][t] >= float(-L/2) and Yplot[k][t] <= float(L/2)):
+                Wsum = Wsum + Wplot[k][t]*abs(Yplot[0][0]-Yplot[0][1])
+        Wintegral.append(Wsum)
+        #print (Z[k][0])
+print ("Max and min values of Wintegral", np.amax( Wintegral), np.amin( Wintegral))
+
+jato=10
+for k in range(0,len(Wintegral)):
+    print(Wintegral[k].real,500+jato,"m" )
+    jato = jato + 10
+    
+#Testing whether Ustar integral is constant with height
+Ustsum = 0
+for t in range(0,len(y)):
+    if (y[t] >= float(-L/2) and y[t] <= float(L/2)):
+        Ustsum = Ustsum + Ustarplot[t]*abs(y[0]-y[1])
+print ("Ustar integral value", Ustsum)
+
+#Getting the U integral (not constant with height)
+Uintegral = []
+integralZ = []
+for k in range(0,len(U)):
+    if Zplot[k][0] > Hmax:
+        Usum = 0
+        for t in range(0,len(U[0])):
+            if (Yplot[k][t] >= float(-L/2) and Yplot[k][t] <= float(L/2)):
+                Usum = Usum + Uplot[k][t]*abs(Yplot[0][0]-Yplot[0][1])
+        Uintegral.append(Usum)
+        integralZ.append(z[k])
+        #print (Z[k][0])
+print ("Max and min values of Uintegral", np.amax( Uintegral), np.amin( Uintegral))
+
+
+#Getting the B integral
+Bintegral = []
+for k in range(0,len(B)):
+    if Zplot[k][0] > Hmax:
+        Bsum = 0
+        for t in range(0,len(B[0])):
+            if (Yplot[k][t] >= float(-L/2) and Yplot[k][t] <= float(L/2)):
+                Bsum = Bsum + Bplot[k][t]*abs(Yplot[0][0]-Yplot[0][1])
+        Bintegral.append(Bsum)
+        #print (Z[k][0])
+print ("Max and min values of Bintegral", np.amax( Bintegral), np.amin( Bintegral))
+
+
+
+
+        
 #Plotting the theta angle
 Ustar_real = U * mp.cos(alpha) + W * mp.sin(alpha)
 Wstar_real = - U * mp.sin(alpha) + W * mp.cos(alpha)
