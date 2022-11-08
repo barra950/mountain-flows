@@ -265,7 +265,15 @@ nameoffigure = 'buoyancy.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 #plt.show()
-plt.close()      
+plt.close()   
+
+#Buoyancy for the prandtl case 
+Bp = np.ones_like(B)*[mpf(0)]
+for i in range(0,len(Y)):
+    for t in range(0,len(Y[0])):  
+        Bp[i][t] = Bsfc(Y[i][t]) * mp.exp(-Z[i][t] * mp.sqrt(N * mp.sin(alpha) ) / (mpf(4)*visc*diff)**(1/4) ) * mp.cos(mp.sqrt(N*mp.sin(alpha)) /((mpf(4)*visc*diff)**(1/4))*Z[i][t] )
+
+   
 
 
 #Getting the value of the V wind
@@ -452,6 +460,15 @@ string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 #plt.show()
 plt.close()
+
+
+#Uwind for the prandtl case 
+Up = np.ones_like(U)*[mpf(0)]
+for i in range(0,len(Y)):
+    for t in range(0,len(Y[0])):  
+        Up[i][t] = -Bsfc(Y[i][t])/N * mp.sqrt(diff/visc) * mp.exp(-Z[i][t] * mp.sqrt(N * mp.sin(alpha) ) / (mpf(4)*visc*diff)**(1/4) ) * mp.sin(mp.sqrt(N*mp.sin(alpha)) /((mpf(4)*visc*diff)**(1/4))*Z[i][t] )
+
+   
 
 #PLotting the W wind
 #z = np.arange(0,2010,10) 
@@ -788,7 +805,34 @@ for k in range(0,len(B)):
 print ("Max and min values of Bintegral", np.amax( Bintegral), np.amin( Bintegral))
 
 
+#Testing wether C is a constant
+Uintegral = np.array(Uintegral)
+integralZ = np.array(integralZ)
+Bintegral = np.array(Bintegral)
+delta = float((4*visc*diff)**(1/4)) / np.sqrt(float(N) * float(mp.sin(alpha)))
+Cconst = np.sqrt( np.exp(2 * integralZ/delta) * (Bintegral**2 + float(visc/diff) * float(N)**2 * Uintegral**2 ) )
 
+
+#Plotting the prandtl solution
+# Bpplot = np.array(Bp).T
+# Upplot = np.array(Up).T
+# fig,ax1=plt.subplots()
+# #plt.xticks(maxtime, time2plot, rotation='vertical')
+# plt.rcParams.update({'font.size':20})
+# fsize = 20
+
+# ax1.set_ylim([-0.02,0.1])
+# plt.xlabel('Z [m]',name='Arial',size=fsize)
+# plt.ylabel(r'B [$\rmms^{-2}$]',name='Arial',size=fsize)
+# plt.plot(z,Bpplot[0][:],linewidth=3,color='b')
+# ax1.tick_params('both', length=10, width=1, which='major')
+# ax2=ax1.twinx()
+# ax2.set_ylim([-4,4])
+# plt.plot(z,Upplot[0][:],linewidth=3,color='r')
+# plt.ylabel(r'U [$\rmms^{-1}$]',name='Arial',size=fsize)
+# ax1.set_xlim([0,1000])
+# ax1.set_xticks(np.arange(0,1100,100))
+# ax2.tick_params('both', length=10, width=1, which='major')
 
         
 #Plotting the theta angle
