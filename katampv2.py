@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import numpy as np
 
-#Solving the equations for the Prandtl case
+#Solving the equations for the even case
 dps_value = 100
 
 mp.dps = dps_value
@@ -864,7 +864,7 @@ thetaplotf = (thetaplot).T
 thetaplotf2 = (thetaplot_sign).T 
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r")
+ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
 plt.xlabel(r"$\rm\theta$ ($\rm^{o}$)")
 plt.ylabel("Height (m)")
 plt.xlim([-0.5,6])
@@ -988,7 +988,126 @@ for k in range(0,len(sumterms)):
         final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
 final_sum = np.array(final_sum) 
 
-print (np.nanmax(final_sum) , np.nanmin(final_sum) , '55555555555555555555555555555555555555555555555555')        
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '55555555555555555555555555555555555555555555555555') 
+
+#%%
+
+import mpmath
+from mpmath import *
+from mpmath import mp
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+import numpy as np
+
+#Solving the equations for the odd case
+dps_value = 100
+
+mp.dps = dps_value
+
+
+K = 70
+alpha = mpf(0.1) 
+visc = mpf(5)     
+diff = mpf(5)     
+N = mpf(0.01)    
+L = mpf(1000)
+
+subdivisions = 100
+
+pizao = mp.pi(dps=dps_value)
+
+def H(y):
+    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+
+
+def Bsfc(y):
+    return mpf(0.1) * mp.sin(mpf(2) * pizao * y/L)
+
+
+final_system = []
+b=[]
+for q in range(-K,K+1):
+    equation1 = []
+    equation2 = []
+    equation3 = []
+    Eki = []
+    Cki = []
+    Dki = []
+    for k in range(-K,K+1):
+    
+        R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+        
+        Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+        
+        S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+        S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+        
+        phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+        Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+        
+        m1 = - mp.sqrt(S1 + S2)
+        m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+        m3 = mp.conj(m2)
+        
+        
+        def f1r(y):
+            return (mp.exp(m1 * H(y)) * mp.cos(mpf(2) * (mpf(q) - mpf(k)) * pizao * y / L) )
+        gamma1 = 2/L * mp.quad(f1r,[mpf(0),mpf(L/2)]) 
+        
+        def f2r(y):
+            return (mp.exp(m2 * H(y)) * mp.cos(mpf(2) * (mpf(q) - mpf(k)) * pizao * y / L) )
+        gamma2 = 2/L * mp.quad(f2r,[mpf(0),mpf(L/2)])  
+        
+        
+        if k == 0:
+            equation1.append(mpf(2) * gamma2.imag)
+            Cki.append(k)
+            equation1.append(mpf(2) * gamma2.real)
+            Dki.append(k)
+        else:
+            equation1.append(gamma1)
+            Eki.append(k)
+            equation1.append(mpf(2) * gamma2.imag)
+            Cki.append(k)
+            equation1.append(mpf(2) * gamma2.real)
+            Dki.append(k)
+            
+        if q != 0:
+            
+            if k == 0:
+                equation2.append(mpf(0))
+                equation2.append(mpf(0))
+            else:
+                equation2.append(mpf(k) * gamma1 / (m1**3) )
+                equation2.append(mpf(2) * mpf(k) * (gamma2 / (m2**3) ).imag)
+                equation2.append(mpf(2) * mpf(k) * (gamma2 / (m2**3) ).real)
+        
+        if k == 0:
+            equation3.append(mpf(2) * (m2**2 * gamma2).imag)
+            equation3.append(mpf(2) * (m2**2 * gamma2).real)
+        else:
+            equation3.append(m1**2 * gamma1)
+            equation3.append(mpf(2) * (m2**2 * gamma2).imag)
+            equation3.append(mpf(2) * (m2**2 * gamma2).real)
+    
+    final_system.append(equation1)
+    def f4r(y):
+        return (Bsfc(y) * mp.sin(mpf(2) * mpf(q) * pizao * y / L) )
+    b.append(-2/L * mp.quad(f4r,[mpf(0),mpf(L/2)]))
+    
+    if q != 0:
+        final_system.append(equation2)
+        b.append(mpf(0))
+    
+    
+    final_system.append(equation3)
+    b.append(mpf(0))
+
+
+final_system = matrix(final_system)
+b=matrix(b)
+
+
         
         
         
