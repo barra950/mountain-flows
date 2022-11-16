@@ -194,7 +194,7 @@ Ak = np.array(Ak)
 # for k in range(0,len(Xpost)):
 #     Xpost[k] = float(Xpost[k].real) + float(Xpost[k].imag)*1j
     
-#%%    
+   
 #Getting the Buoyancy value
 
 z = np.arange(0,2010,10) 
@@ -253,12 +253,12 @@ for k in range(0,len(B)):
 ##Plotting the buoyancy
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
-plt.title('Buoyancy')
+plt.title('B$_\max$ 5 $ms^{-2}$        B$_\min$ 5 $ms^{-2}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Bplot,np.arange(-0.1,0.11,0.01),cmap='seismic')
 #plt.contourf(Y,Z,B,cmap='seismic')
-plt.colorbar(label='1/s')
-plt.xlabel("Y axis")
-plt.ylabel("Height")
+plt.colorbar(label='[$ms^{-2}$]')
+plt.xlabel("Y axis [m]")
+plt.ylabel("Height [m]")
 plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
 nameoffigure = 'buoyancy.png'
@@ -332,12 +332,12 @@ for k in range(0,len(V)):
 ##Plotting the V wind
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title('V Wind')
+plt.title('V$_\max$ 5 $ms^{-1}$        V$_\min$ 5 $ms^{-1}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Vplot,np.arange(-7,7.03,0.03),cmap='seismic')
 #plt.contourf(Y,Z,V,cmap='seismic')
-plt.colorbar(label='m/s')
-plt.xlabel("Y axis")
-plt.ylabel("Height")
+plt.colorbar(label='[$ms^{-1}$]')
+plt.xlabel("Y axis [m]")
+plt.ylabel("Height [m]")
 plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
 nameoffigure = 'Vwind.png'
@@ -346,7 +346,7 @@ plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 #plt.show()
 plt.close()  
 
-#%%
+
 #Getting the value of the U wind
 #We first need the value of Eq
 Eq=[]
@@ -447,12 +447,12 @@ for k in range(0,len(U)):
 #Plotting the U wind
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
-plt.title('U Wind')
+plt.title('U$_\max$ 5 $ms^{-1}$        U$_\min$ 5 $ms^{-1}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Uplot,np.arange(-25,26,1),cmap='seismic')
 #plt.contourf(Y,Z,U,cmap='seismic')
-plt.colorbar(label='m/s')
-plt.xlabel("Y axis")
-plt.ylabel("Height")
+plt.colorbar(label='[$ms^{-1}$]')
+plt.xlabel("Y axis [m]")
+plt.ylabel("Height [m]")
 plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
 nameoffigure = 'Uwind.png'
@@ -526,12 +526,12 @@ for k in range(0,len(W)):
 ##Plotting the W wind
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title('W Wind')
+plt.title('W$_\max$ 5 $ms^{-1}$        W$_\min$ 5 $ms^{-1}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Wplot,np.arange(-6,6.2,0.2),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
-plt.colorbar(label='m/s')
-plt.xlabel("Y axis")
-plt.ylabel("Height")
+plt.colorbar(label='[$ms^{-1}$]')
+plt.xlabel("Y axis [m]")
+plt.ylabel("Height [m]")
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
 nameoffigure = 'Wwind.png'
@@ -592,12 +592,12 @@ for k in range(0,len(P)):
 ##Plotting the pressure
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title('Pressure')
+plt.title('P$_\max$ 5 Pa        P$_\min$ 5 Pa',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Pplot,np.arange(-15,15.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
-plt.colorbar(label='hPa')
-plt.xlabel("Y axis")
-plt.ylabel("Height")
+plt.colorbar(label='Pa')
+plt.xlabel("Y axis [m]")
+plt.ylabel("Height [m]")
 #plt.xlim([-10000,10000])
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
@@ -669,8 +669,8 @@ jk = 20
 #q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
 #plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
 #plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
-plt.xlabel("Y axis")
-plt.ylabel("Height")
+plt.xlabel("Y axis [m]")
+plt.ylabel("Height [m]")
 #plt.xlim([-5000,5000])
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
@@ -704,7 +704,7 @@ fig.add_subplot(2,1,1)
 #plt.title('U star plot')
 plt.plot(y,Ustarplot)
 plt.xlabel("Y axis $(m)$")
-plt.ylabel("U$^{\u2605}_\infty$ ($ms^{-1}$)")
+plt.ylabel("U$^{\u2605}_\infty$ [$ms^{-1}$]")
 #plt.xlim([-5000,5000])
 plt.xlim([float(-L),float(L)])
 #plt.ylim([-6,2])
@@ -722,8 +722,8 @@ plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
 #q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
 #plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
 #plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
-plt.xlabel("Y axis $(m)$")
-plt.ylabel("Height $(m)$")
+plt.xlabel("Y axis [m]")
+plt.ylabel("Height [m]")
 #plt.xlim([-5000,5000])
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
@@ -866,7 +866,7 @@ fig,ax1 = plt.subplots(figsize=(10,10))
 plt.rcParams.update({'font.size':16})
 ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
 plt.xlabel(r"$\rm\theta$ ($\rm^{o}$)")
-plt.ylabel("Height (m)")
+plt.ylabel("Height [m]")
 plt.xlim([-0.5,6])
 ax1.set_ylim([0,1500])
 ax1.set_xticks(np.arange(-0.5,6.5,0.5))
@@ -1106,6 +1106,66 @@ for q in range(-K,K+1):
 
 final_system = matrix(final_system)
 b=matrix(b)
+
+
+#Qr solver 
+X = qr_solve(final_system, b)
+
+difference = b - (final_system * X[0])
+
+difference2 = []
+for k in difference:
+    difference2.append(float(k))
+    
+difference2 = np.array(difference2)
+
+if abs(np.amax(difference2)) < 0.00000000000000001 and abs(np.amin(difference2)) < 0.00000000000000001:
+    print(True)
+else:
+    print(False)
+    
+    
+#Getting the values for Ek, Ck and Dk
+
+
+solution = []
+for k in X:
+    solution.append(k)
+
+strings = []
+
+for k in range(-K,K+1):
+    if k != 0:
+        strings.append('E')     
+            
+    strings.append('R')           
+    strings.append('I')             
+        
+
+
+Ek = []
+Rk = []
+Ik = []
+for k in range(0,len(solution[0])):
+     if 'E' in strings[k]:
+         Ek.append(solution[0][k])
+         
+     if 'R' in strings[k]:
+         Rk.append(solution[0][k])
+        
+     if 'I' in strings[k]:
+         Ik.append(solution[0][k])
+         
+Ck=[]
+      
+for k in range(0,len(Rk)):
+    Ck.append(Rk[k] + Ik[k] * 1j)
+
+Ck = np.array(Ck)
+
+Dk = - Ck.conjugate()
+
+Ek = np.array(Ek)
 
 
         
