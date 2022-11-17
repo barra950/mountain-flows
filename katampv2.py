@@ -11,7 +11,7 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 70
+K = 100
 alpha = mpf(0.1) 
 visc = mpf(5)     
 diff = mpf(5)     
@@ -253,12 +253,13 @@ for k in range(0,len(B)):
 ##Plotting the buoyancy
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
-plt.title('B$_\max$ 5 $ms^{-2}$        B$_\min$ 5 $ms^{-2}$',x=0.5, y=1.02)
+plt.title(r'B$_\max$ = 5 m $\rms^{-2}$        B$_\min$ = 5 m $\rms^{-2}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Bplot,np.arange(-0.1,0.11,0.01),cmap='seismic')
 #plt.contourf(Y,Z,B,cmap='seismic')
-plt.colorbar(label='[$ms^{-2}$]')
-plt.xlabel("Y axis [m]")
-plt.ylabel("Height [m]")
+#plt.colorbar(label='[$ms^{-2}$]')
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
 nameoffigure = 'buoyancy.png'
@@ -332,12 +333,13 @@ for k in range(0,len(V)):
 ##Plotting the V wind
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title('V$_\max$ 5 $ms^{-1}$        V$_\min$ 5 $ms^{-1}$',x=0.5, y=1.02)
+plt.title(r'V$_\max$ = 5 m $\rms^{-2}$        V$_\min$ = 5 m $\rms^{-2}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Vplot,np.arange(-7,7.03,0.03),cmap='seismic')
 #plt.contourf(Y,Z,V,cmap='seismic')
-plt.colorbar(label='[$ms^{-1}$]')
-plt.xlabel("Y axis [m]")
-plt.ylabel("Height [m]")
+#plt.colorbar(label='[$ms^{-1}$]')
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
 nameoffigure = 'Vwind.png'
@@ -447,12 +449,13 @@ for k in range(0,len(U)):
 #Plotting the U wind
 fig = plt.figure(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
-plt.title('U$_\max$ 5 $ms^{-1}$        U$_\min$ 5 $ms^{-1}$',x=0.5, y=1.02)
+plt.title(r'U$_\max$ = 5 m $\rms^{-1}$        U$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Uplot,np.arange(-25,26,1),cmap='seismic')
 #plt.contourf(Y,Z,U,cmap='seismic')
-plt.colorbar(label='[$ms^{-1}$]')
-plt.xlabel("Y axis [m]")
-plt.ylabel("Height [m]")
+#plt.colorbar(label='[$ms^{-1}$]')
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
 nameoffigure = 'Uwind.png'
@@ -526,12 +529,13 @@ for k in range(0,len(W)):
 ##Plotting the W wind
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title('W$_\max$ 5 $ms^{-1}$        W$_\min$ 5 $ms^{-1}$',x=0.5, y=1.02)
+plt.title(r'W$_\max$ = 5 m $\rms^{-1}$        W$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Wplot,np.arange(-6,6.2,0.2),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
-plt.colorbar(label='[$ms^{-1}$]')
-plt.xlabel("Y axis [m]")
-plt.ylabel("Height [m]")
+#plt.colorbar(label='[$ms^{-1}$]')
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
 nameoffigure = 'Wwind.png'
@@ -592,12 +596,12 @@ for k in range(0,len(P)):
 ##Plotting the pressure
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title('P$_\max$ 5 Pa        P$_\min$ 5 Pa',x=0.5, y=1.02)
+plt.title(r'P$_\max$ = 5 $\rmm^{2}$ $\rms^{-2}$        P$_\min$ = 5 $\rmm^{2}$ $\rms^{-2}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Pplot,np.arange(-15,15.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
-plt.colorbar(label='Pa')
-plt.xlabel("Y axis [m]")
-plt.ylabel("Height [m]")
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
 #plt.xlim([-10000,10000])
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
@@ -703,8 +707,8 @@ plt.rcParams.update({'font.size':16})
 fig.add_subplot(2,1,1)
 #plt.title('U star plot')
 plt.plot(y,Ustarplot)
-plt.xlabel("Y axis $(m)$")
-plt.ylabel("U$^{\u2605}_\infty$ [$ms^{-1}$]")
+plt.xlabel("Y [m]")
+plt.ylabel('U$^{\u2605}_\infty$ [m s$^{-1}$]')
 #plt.xlim([-5000,5000])
 plt.xlim([float(-L),float(L)])
 #plt.ylim([-6,2])
@@ -722,8 +726,8 @@ plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
 #q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
 #plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
 #plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
-plt.xlabel("Y axis [m]")
-plt.ylabel("Height [m]")
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
 #plt.xlim([-5000,5000])
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
@@ -830,13 +834,13 @@ fsize = 20
 
 ax1.set_ylim([-0.02,0.1])
 plt.xlabel('Z [m]',name='Arial',size=fsize)
-plt.ylabel(r'B [$\rmms^{-2}$]',name='Arial',size=fsize)
+plt.ylabel(r'B [m $\rms^{-2}$]',name='Arial',size=fsize)
 plt.plot(z,Bpplot2[0][:],linewidth=3,color='b')
 ax1.tick_params('both', length=10, width=1, which='major')
 ax2=ax1.twinx()
 ax2.set_ylim([-4,4])
 plt.plot(z,Upplot2[0][:],linewidth=3,color='r')
-plt.ylabel(r'U [$\rmms^{-1}$]',name='Arial',size=fsize)
+plt.ylabel(r'U [m $\rms^{-1}$]',name='Arial',size=fsize)
 ax1.set_xlim([0,1000])
 ax1.set_xticks(np.arange(0,1100,100))
 ax2.tick_params('both', length=10, width=1, which='major')
@@ -1166,6 +1170,81 @@ Ck = np.array(Ck)
 Dk = - Ck.conjugate()
 
 Ek = np.array(Ek)
+
+
+
+#Getting the Buoyancy value
+
+z = np.arange(0,2010,10) 
+y = np.arange(-float(L),float(L)+10,10) 
+Y,Z = np.meshgrid(y,z)
+Y = Y * mpf(1)
+Z = Z * mpf(1)
+B = np.ones_like(Y)*[mpf(0)]
+
+for k in range(-K,K+1):
+    
+    R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+    
+    Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+    
+    S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+    S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+    
+    phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+    Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+    
+    m1 = - mp.sqrt(S1 + S2)
+    m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+    m3 = mp.conj(m2)
+    
+    for i in range(0,len(Y)):
+        for t in range(0,len(Y[0])):
+            if k != 0:
+                B[i][t] = B[i][t] + ( 1j*Ek[Eki.index(k)] * mp.exp(m1 * Z[i][t]) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)  )
+            B[i][t] = B[i][t] + ( ( Ck[Cki.index(k)] * mp.exp(m2 * Z[i][t]) + Dk[Dki.index(k)] * mp.exp(m3 * Z[i][t]) )  * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L) )
+
+
+for k in range(0,B.shape[0]):
+    for t in range(0,B.shape[1]):
+        if Z[k][t] < H(Y[k][t]):
+            B[k][t] = np.nan
+        if Z[k][t] == H(Y[k][t]):
+            print (B[k][t], "B value at the ground")
+#         if abs(Z[k][t] - H(Y[k][t])) < 0.1:
+#             if B[k][t] > 0.101:
+#                 print (B[k][t],'fudeu geral -------------------------------------------------')
+# #            print (B[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
+    
+#Bp = Bsfc(Y) * np.exp(-Z * np.sqrt(N * np.sin(alpha) ) / (4*visc*diff)**(1/4) ) * np.cos(np.sqrt(N*np.sin(alpha)) /((4*visc*diff)**(1/4))*Z )
+
+Yplot,Zplot = np.meshgrid(y,z)
+Bplot = np.ones_like(B)*[mpf(0)]
+for k in range(0,len(B)):
+    for t in range(0,len(B[0])):
+        Bplot[k][t] = float(B[k][t].real) #+ 1j*float(B[k][t].imag)
+        # if B[k][t].real < 0 and abs(B[k][t].real) > 0.1:
+        #     print(B[k][t].real)
+       
+
+    
+##Plotting the buoyancy
+fig = plt.figure(figsize=(10,10)) # create a figure
+plt.rcParams.update({'font.size':16})
+plt.title(r'B$_\max$ 5 $\rmms^{-2}$        B$_\min$ 5 $\rmms^{-2}$',x=0.5, y=1.02)
+plt.contourf(Yplot,Zplot,Bplot,np.arange(-0.1,0.11,0.01),cmap='seismic')
+#plt.contourf(Y,Z,B,cmap='seismic')
+#plt.colorbar(label='[$ms^{-2}$]')
+plt.colorbar()
+plt.xlabel("Y axis [m]")
+plt.ylabel("Height [m]")
+plt.xlim([-float(L),float(L)])
+plt.ylim([0,1500])
+nameoffigure = 'buoyancy.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
         
