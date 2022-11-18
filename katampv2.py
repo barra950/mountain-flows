@@ -11,7 +11,7 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 100
+K = 70
 alpha = mpf(0.1) 
 visc = mpf(5)     
 diff = mpf(5)     
@@ -667,7 +667,7 @@ fig.add_subplot(1,1,1)
 CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k')
 #plt.clabel(CS, fontsize=9, inline=True)
 #plt.colorbar(label='m/s')
-plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
+#plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
 #plt.contourf(Y,Z,psi,cmap='seismic')
 jk = 20
 #q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
@@ -877,6 +877,103 @@ ax1.set_xticks(np.arange(-0.5,6.5,0.5))
 ax1.set_yticks(np.arange(0,1600,100))
 ax1.tick_params('both', length=10, width=1, which='major')
 plt.grid(True)
+
+#%%
+
+import pickle
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/Ak.pickle', 'wb') as handle:
+    pickle.dump(Ak, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/Ak.pickle', 'rb') as handle:
+    Ak = pickle.load(handle)
+    
+    
+    
+    
+with open('/home/owner/Documents/katabatic_flows/variables/Ck.pickle', 'wb') as handle:
+    pickle.dump(Ck, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/Ck.pickle', 'rb') as handle:
+    Ck = pickle.load(handle)
+    
+
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/Dk.pickle', 'wb') as handle:
+    pickle.dump(Dk, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/Dk.pickle', 'rb') as handle:
+    Dk = pickle.load(handle)
+    
+    
+       
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/B.pickle', 'wb') as handle:
+    pickle.dump(B, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/B.pickle', 'rb') as handle:
+    B = pickle.load(handle)
+    
+ 
+    
+ 
+with open('/home/owner/Documents/katabatic_flows/variables/V.pickle', 'wb') as handle:
+    pickle.dump(V, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/V.pickle', 'rb') as handle:
+    V = pickle.load(handle)
+    
+
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/VlargeY.pickle', 'wb') as handle:
+    pickle.dump(V, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/VlargeY.pickle', 'rb') as handle:
+    V = pickle.load(handle)
+    
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/U.pickle', 'wb') as handle:
+    pickle.dump(U, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/U.pickle', 'rb') as handle:
+    U = pickle.load(handle)
+ 
+    
+ 
+with open('/home/owner/Documents/katabatic_flows/variables/W.pickle', 'wb') as handle:
+    pickle.dump(W, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/W.pickle', 'rb') as handle:
+    W = pickle.load(handle)
+
+
+    
+with open('/home/owner/Documents/katabatic_flows/variables/WlargeY.pickle', 'wb') as handle:
+    pickle.dump(W, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/WlargeY.pickle', 'rb') as handle:
+    W = pickle.load(handle)
+
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/P.pickle', 'wb') as handle:
+    pickle.dump(P, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/P.pickle', 'rb') as handle:
+    P = pickle.load(handle)
+    
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/psi.pickle', 'wb') as handle:
+    pickle.dump(psi, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/psi.pickle', 'rb') as handle:
+    psi = pickle.load(handle)
 
 
 #%%
