@@ -197,7 +197,7 @@ Ak = np.array(Ak)
    
 #Getting the Buoyancy value
 
-z = np.arange(0,2010,10) 
+z = np.arange(0,2002,2) 
 y = np.arange(-float(L),float(L)+10,10) 
 Y,Z = np.meshgrid(y,z)
 Y = Y * mpf(1)
@@ -881,6 +881,34 @@ plt.grid(True)
 #%%
 
 import pickle
+import mpmath
+from mpmath import *
+from mpmath import mp
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+import numpy as np
+
+dps_value = 100
+
+mp.dps = dps_value
+
+
+K = 70
+alpha = mpf(0.1) 
+visc = mpf(5)     
+diff = mpf(5)     
+N = mpf(0.01)    
+L = mpf(1000)
+
+subdivisions = 100
+
+pizao = mp.pi(dps=dps_value)
+
+def H(y):
+    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+
+def Bsfc(y):
+    return mpf(0.1)
 
 
 with open('/home/owner/Documents/katabatic_flows/variables/Ak.pickle', 'wb') as handle:
