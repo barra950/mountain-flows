@@ -4,6 +4,7 @@ from mpmath import mp
 import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import numpy as np
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 
 #Solving the equations for the even case
 dps_value = 100
@@ -23,7 +24,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -197,7 +198,7 @@ Ak = np.array(Ak)
    
 #Getting the Buoyancy value
 
-z = np.arange(0,2002,2) 
+z = np.arange(0,2010,10) 
 y = np.arange(-float(L),float(L)+10,10) 
 Y,Z = np.meshgrid(y,z)
 Y = Y * mpf(1)
@@ -251,17 +252,25 @@ for k in range(0,len(B)):
 
     
 ##Plotting the buoyancy
-fig = plt.figure(figsize=(10,10)) # create a figure
+fig,ax1 = plt.subplots(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
 plt.title(r'B$_\max$ = 5 m $\rms^{-2}$        B$_\min$ = 5 m $\rms^{-2}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Bplot,np.arange(-0.1,0.11,0.01),cmap='seismic')
 #plt.contourf(Y,Z,B,cmap='seismic')
 #plt.colorbar(label='[$ms^{-2}$]')
-plt.colorbar()
+plt.colorbar(ticks=np.arange(-0.1,0.12,0.02))
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+
 nameoffigure = 'buoyancy.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
@@ -670,11 +679,11 @@ CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k')
 #plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
 #plt.contourf(Y,Z,psi,cmap='seismic')
 jk = 20
-#q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
-#plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
-#plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
-plt.xlabel("Y axis [m]")
-plt.ylabel("Height [m]")
+# q = plt.quiver(Yplot[::jk,::jk],Zplot[::jk,::jk],Vplot[::jk,::jk],Wplot[::jk,::jk],scale=50,angles="xy")
+# plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
+# plt.streamplot(Yplot,Zplot,Vplot,Wplot,density = 3,arrowstyle='->',arrowsize = 1.5)
+# plt.xlabel("Y axis [m]")
+# plt.ylabel("Height [m]")
 #plt.xlim([-5000,5000])
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
@@ -869,7 +878,7 @@ thetaplotf2 = (thetaplot_sign).T
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
-plt.xlabel(r"$\rm\theta$ ($\rm^{o}$)")
+plt.xlabel(r"$\rm\theta$ [$\rm^{o}$]")
 plt.ylabel("Height [m]")
 plt.xlim([-0.5,6])
 ax1.set_ylim([0,1500])
@@ -919,6 +928,15 @@ with open('/home/owner/Documents/katabatic_flows/variables/Ak.pickle', 'rb') as 
     
     
     
+
+with open('/home/owner/Documents/katabatic_flows/variables/Aki.pickle', 'wb') as handle:
+    pickle.dump(Aki, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/Aki.pickle', 'rb') as handle:
+    Aki = pickle.load(handle)
+    
+    
+    
     
 with open('/home/owner/Documents/katabatic_flows/variables/Ck.pickle', 'wb') as handle:
     pickle.dump(Ck, handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -926,6 +944,16 @@ with open('/home/owner/Documents/katabatic_flows/variables/Ck.pickle', 'wb') as 
 with open('/home/owner/Documents/katabatic_flows/variables/Ck.pickle', 'rb') as handle:
     Ck = pickle.load(handle)
     
+    
+    
+    
+with open('/home/owner/Documents/katabatic_flows/variables/Cki.pickle', 'wb') as handle:
+    pickle.dump(Cki, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/Cki.pickle', 'rb') as handle:
+    Cki = pickle.load(handle)   
+    
+
 
 
 
@@ -935,9 +963,18 @@ with open('/home/owner/Documents/katabatic_flows/variables/Dk.pickle', 'wb') as 
 with open('/home/owner/Documents/katabatic_flows/variables/Dk.pickle', 'rb') as handle:
     Dk = pickle.load(handle)
     
+
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/Dki.pickle', 'wb') as handle:
+    pickle.dump(Dki, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+with open('/home/owner/Documents/katabatic_flows/variables/Dki.pickle', 'rb') as handle:
+    Dki = pickle.load(handle)
+
+    
     
        
-    
 
 with open('/home/owner/Documents/katabatic_flows/variables/B.pickle', 'wb') as handle:
     pickle.dump(B, handle, protocol=pickle.HIGHEST_PROTOCOL)
