@@ -1516,11 +1516,12 @@ plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 plt.close()
 
 
+
 #Getting the value of the V wind
-Y,Z = np.meshgrid(y,z)
-Y = Y * mpf(1)
-Z = Z * mpf(1)
-B = np.ones_like(Y)*[mpf(0)]
+# Y,Z = np.meshgrid(y,z)
+# Y = Y * mpf(1)
+# Z = Z * mpf(1)
+V = np.ones_like(Y)*[mpf(0)]
 
 
 for k in range(-K,K+1):
@@ -1539,20 +1540,38 @@ for k in range(-K,K+1):
     m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
     m3 = mp.conj(m2)
     
+    def f1r(y):
+        return (mp.exp(m1 * H(y)) * mp.cos(mpf(2) * mpf(- k) * pizao * y / L) )
+    gamma1k = mpf(2)/L * mp.quad(f1r,[mpf(0),L/mpf(2)])
+        
+    def f2r(y):
+        return (mp.exp(m2 * H(y)) * mp.cos(mpf(2) * mpf(- k) * pizao * y / L) )
+    gamma2k = mpf(2)/L * mp.quad(f2r,[mpf(0),L/mpf(2)])
+    
+    
     for i in range(0,len(Y)):
         for t in range(0,len(Y[0])):
             if k != 0:
-                V[i][t] = V[i][t] + mp.cos(alpha)/visc * 2j*mpf(k)*pizao/L *  ( Ak[Aki.index(k)]*mp.exp(m1*Z[i][t])/(m1**3) + Ck[Cki.index(k)]*mp.exp(m2*Z[i][t])/(m2**3)  + Dk[Dki.index(k)]*mp.exp(m3*Z[i][t])/(m3**3) ) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)
-    
+                V[i][t] = V[i][t] + mp.cos(alpha)/visc * 2j*mpf(k)*pizao/L *  ( 1j * Ek[Eki.index(k)]*mp.exp(m1*Z[i][t])/(m1**3) + Ck[Cki.index(k)]*mp.exp(m2*Z[i][t])/(m2**3)  + Dk[Dki.index(k)]*mp.exp(m3*Z[i][t])/(m3**3) ) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)
+                V[i][t] = V[i][t] + mp.cos(alpha) / visc * mpf(2) * mpf(k) * pizao / L * ( Ek[Eki.index(k)] * gamma1k / m1**3 + mpf(2) * (Ck[Cki.index(k)] * gamma2k / m2**3).imag  ) 
+
+for k in range(0,V.shape[0]):
+    for t in range(0,V.shape[1]):
+        if Z[k][t] < H(Y[k][t]):
+            V[k][t] = np.nan
+        if Z[k][t] == H(Y[k][t]):
+            print (V[k][t], "V value at ground")
+#        if abs(Z[k][t] - H(Y[k][t])) < 0.1:
+#            if V[k][t] > 0.1:
+#                print (V[k][t],'fudeu geral -------------------------------------------------')
+#            print (V[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
+
 
 Yplot,Zplot = np.meshgrid(y,z)
 Vplot = np.ones_like(V)*[mpf(0)]
 for k in range(0,len(V)):
     for t in range(0,len(V[0])):
-        Vplot[k][t] = float(V[k][t].real) #+ 1j*float(B[k][t].imag)
-        # if B[k][t].real < 0 and abs(B[k][t].real) > 0.1:
-        #     print(B[k][t].real)
-
+        Vplot[k][t] = float(V[k][t].real) 
 
 ##Plotting the V wind
 fig = plt.figure(figsize=(10,10)) 
@@ -1569,63 +1588,10 @@ nameoffigure = 'Vwind.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 #plt.show()
-plt.close()
+plt.close()  
 
 
 
-#Getting the value of the U wind
-#We first need the value of Eq
-Eq=[]
-Eqi=[]
-for q in range(-K,K+1):
-    E = mpf(0)
-    for k in range(-K,K+1):
-    
-        R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
-        
-        Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
-        
-        S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
-        S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
-        
-        phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
-        Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
-        
-        m1 = - mp.sqrt(S1 + S2)
-        m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
-        m3 = mp.conj(m2)
-        
-        
-        def f1r(y):
-            return (mp.exp(m1 * H(y)) * mp.cos(mpf(2) * (mpf(q) - mpf(k)) * pizao * y / L) )       
-        gamma1 = mpf(2)/L * mp.quad(f1r,[mpf(0),L/mpf(2)])
-        
-        def f2r(y):
-            return (mp.exp(m2 * H(y)) * mp.cos(mpf(2) * (mpf(q) - mpf(k)) * pizao * y / L) )
-        gamma2 = mpf(2)/L * mp.quad(f2r,[mpf(0),L/mpf(2)])
-        
-#        def f3r(y):
-#            return (np.exp(m3 * H(y)) * np.cos(2 * (q - k) * np.pi * y / L) ).real
-#        def f3i(y):
-#            return (np.exp(m3 * H(y)) * np.cos(2 * (q - k) * np.pi * y / L) ).imag
-#        gamma3 = 2/L * (quad(f3r,0,L/2)[0] + quad(f3i,0,L/2)[0]*1j) 
-        
-#        gamma1 = 0.0
-#        gamma2 = 0.0
-#        gamma3 = 0.0
-#        for y in points:
-#            gamma1 = 2/L * f1(y)*tick + gamma1
-#            gamma2 = 2/L * f2(y)*tick + gamma2
-#            #gamma3 = 2/L * f3(y)*tick + gamma3
-            
-        if k != 0:
-            E = E - mp.sin(alpha)/visc * Ak[Aki.index(k)]*gamma1/(m1**2) 
-        E = E - mpf(2)*mp.sin(alpha)/visc * ( Ck[Cki.index(k)]*gamma2/(m2**2) ).real
-    
-    Eq.append(E)
-    Eqi.append(q)
-
-Eq= np.array(Eq)
 
 
         
