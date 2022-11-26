@@ -979,7 +979,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -1290,7 +1290,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 
 def Bsfc(y):
@@ -1574,21 +1574,160 @@ for k in range(0,len(V)):
         Vplot[k][t] = float(V[k][t].real) 
 
 ##Plotting the V wind
-fig = plt.figure(figsize=(10,10)) 
+fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title('V Wind')
-plt.contourf(Y,Z,V,np.arange(-7,7.5,0.5),cmap='seismic')
+plt.title(r'V$_\max$ = 5 m $\rms^{-2}$        V$_\min$ = 5 m $\rms^{-2}$',x=0.5, y=1.02)
+plt.contourf(Yplot,Zplot,Vplot,np.arange(-7,7.03,0.03),cmap='seismic')
 #plt.contourf(Y,Z,V,cmap='seismic')
-plt.colorbar(label='m/s')
-plt.xlabel("Y axis")
-plt.ylabel("Height")
-plt.xlim([-L,L])
+#plt.colorbar(label='[$ms^{-1}$]')
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
+plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 nameoffigure = 'Vwind.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 #plt.show()
 plt.close()  
+
+
+#Getting the value of the U wind
+#We first need the value of Eq
+Eq=[]
+Eqi=[]
+for q in range(-K,K+1):
+    E = mpf(0)
+    for k in range(-K,K+1):
+    
+        R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+        
+        Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+        
+        S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+        S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+        
+        phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+        Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+        
+        m1 = - mp.sqrt(S1 + S2)
+        m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+        m3 = mp.conj(m2)
+        
+        
+        def f1r(y):
+            return (mp.exp(m1 * H(y)) * mp.cos(mpf(2) * (mpf(q) - mpf(k)) * pizao * y / L) )
+        gamma1 = mpf(2)/L * mp.quad(f1r,[mpf(0),L/mpf(2)])
+        
+        def f2r(y):
+            return (mp.exp(m2 * H(y)) * mp.cos(mpf(2) * (mpf(q) - mpf(k)) * pizao * y / L) )
+        gamma2 = mpf(2)/L * mp.quad(f2r,[0,L/2])
+        
+#        def f3r(y):
+#            return (np.exp(m3 * H(y)) * np.cos(2 * (q - k) * np.pi * y / L) ).real
+#        def f3i(y):
+#            return (np.exp(m3 * H(y)) * np.cos(2 * (q - k) * np.pi * y / L) ).imag
+#        gamma3 = 2/L * (quad(f3r,0,L/2)[0] + quad(f3i,0,L/2)[0]*1j) 
+        
+#        gamma1 = 0.0
+#        gamma2 = 0.0
+#        gamma3 = 0.0
+#        for y in points:
+#            gamma1 = 2/L * f1(y)*tick + gamma1
+#            gamma2 = 2/L * f2(y)*tick + gamma2
+#            #gamma3 = 2/L * f3(y)*tick + gamma3
+            
+        if k != 0:
+            E = E - 1j * mp.sin(alpha)/visc * ( Ek[Eki.index(k)]*gamma1/(m1**2) + mpf(2) * ( Ck[Cki.index(k)] * gamma2 / (m2**2) ).imag )
+        
+    
+    Eq.append(E)
+    Eqi.append(q)
+
+Eq= np.array(Eq)
+
+
+
+# Y,Z = np.meshgrid(y,z)
+# Y = Y * mpf(1)
+# Z = Z * mpf(1)
+U = np.ones_like(Y)*[mpf(0)]
+
+
+for k in range(-K,K+1):
+    
+    R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+    
+    Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+    
+    S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+    S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+    
+    phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+    Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+    
+    m1 = - mp.sqrt(S1 + S2)
+    m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+    m3 = mp.conj(m2)
+    
+    for i in range(0,len(Y)):
+        for t in range(0,len(Y[0])):
+            if k != 0:
+                U[i][t] = U[i][t] + mp.sin(alpha)/visc * 1j*Ek[Eki.index(k)]/(m1**2) * mp.exp(m1*Z[i][t]) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)
+            U[i][t] = U[i][t] + mp.sin(alpha)/visc * ( Ck[Cki.index(k)]/(m2**2)*mp.exp(m2*Z[i][t]) + Dk[Dki.index(k)]/(m3**2)*mp.exp(m3*Z[i][t]) ) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L) + 1j *Eq[Eqi.index(k)] * mp.sin(mpf(2) * mpf(k) * pizao * Y[i][t] / L)
+
+
+for k in range(0,U.shape[0]):
+    for t in range(0,U.shape[1]):
+        if Z[k][t] < H(Y[k][t]):
+            U[k][t] = np.nan
+        if Z[k][t] == H(Y[k][t]):
+            print (U[k][t], "U value at ground")
+#        if abs(Z[k][t] - H(Y[k][t])) < 0.1:
+#            if U[k][t] > 0.1:
+#                print (U[k][t],'fudeu geral -------------------------------------------------')
+##            print (U[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
+
+Yplot,Zplot = np.meshgrid(y,z)
+Uplot = np.ones_like(U)*[mpf(0)]
+for k in range(0,len(U)):
+    for t in range(0,len(U[0])):
+        Uplot[k][t] = float(U[k][t].real) #+ 1j*float(B[k][t].imag)
+        # if B[k][t].real < 0 and abs(B[k][t].real) > 0.1:
+        #     print(B[k][t].real)
+
+
+#Plotting the U wind
+fig,ax1 = plt.subplots(figsize=(10,10)) # create a figure
+plt.rcParams.update({'font.size':16})
+plt.title(r'U$_\max$ = 5 m $\rms^{-1}$        U$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
+plt.contourf(Yplot,Zplot,Uplot,np.arange(-25,26,1),cmap='seismic')
+#plt.contourf(Y,Z,U,cmap='seismic')
+#plt.colorbar(label='[$ms^{-1}$]')
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
+plt.xlim([-float(L),float(L)])
+plt.ylim([0,1500])
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+nameoffigure = 'Uwind.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+#plt.show()
+plt.close()
 
 
 
