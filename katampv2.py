@@ -12,7 +12,7 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 70
+K = 90
 alpha = mpf(0.1) 
 visc = mpf(5)     
 diff = mpf(5)     
@@ -24,7 +24,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(350) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -1883,6 +1883,156 @@ nameoffigure = 'pressure.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 plt.show()
+plt.close()
+
+
+
+#Calculating the streamlines 
+#z = np.arange(0,2010,10) 
+#y = np.arange(-5000,5050,50) 
+#Y,Z = np.meshgrid(y,z)
+psi = np.ones_like(Y)*[mpf(0)]
+
+
+for k in range(-K,K+1):
+    
+    R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+    
+    Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+    
+    S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+    S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+    
+    phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+    Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+    
+    m1 = - mp.sqrt(S1 + S2)
+    m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+    m3 = mp.conj(m2)
+    
+    
+    def f1r(y):
+        return (mp.exp(m1 * H(y)) * mp.cos(mpf(2) * mpf(- k) * pizao * y / L) )
+    gamma1k = mpf(2)/L * mp.quad(f1r,[0,L/2])
+        
+    def f2r(y):
+        return (mp.exp(m2 * H(y)) * mp.cos(mpf(2) * mpf(- k) * pizao * y / L) )
+    gamma2k = mpf(2)/L * mp.quad(f2r,[0,L/2])
+    
+    for i in range(0,len(Y)):
+        for t in range(0,len(Y[0])):
+            if k != 0:
+                psi[i][t] = psi[i][t] - mp.tan(alpha) * 1j*L* Eq[Eqi.index(k)] / (mpf(2)*mpf(k)*pizao) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)  - mp.cos(alpha)/visc * 2j*mpf(k)*pizao/L *  ( 1j*Ek[Eki.index(k)]*mp.exp(m1*Z[i][t])/(m1**4) + Ck[Cki.index(k)]*mp.exp(m2*Z[i][t])/(m2**4)  + Dk[Dki.index(k)]*mp.exp(m3*Z[i][t])/(m3**4) ) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)
+                psi[i][t] = psi[i][t] - ( mp.cos(alpha) / visc * mpf(2) * mpf(k) * pizao / L * ( Ek[Eki.index(k)] * gamma1k / m1**3 + mpf(2) * (Ck[Cki.index(k)] * gamma2k / m2**3).imag  ) ) * Z[i][t]
+psi[i][t] = psi[i][t] + Eq[Eqi.index(0)] * Y[i][t] * mp.tan(alpha)
+
+for k in range(0,psi.shape[0]):
+    for t in range(0,psi.shape[1]):
+        if Z[k][t] < H(Y[k][t]):
+            psi[k][t] = np.nan
+        if Z[k][t] == H(Y[k][t]):
+            print (psi[k][t], "psi value at ground")
+#        if abs(Z[k][t] - H(Y[k][t])) < 0.1:
+#            if psi[k][t] > 0.1:
+#                print (psi[k][t],'fudeu geral -------------------------------------------------')
+##            print (psi[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
+
+
+Yplot,Zplot = np.meshgrid(y,z)
+psiplot = np.ones_like(psi)*[mpf(0)]
+for k in range(0,len(psi)):
+    for t in range(0,len(psi[0])):
+        psiplot[k][t] = float(psi[k][t].real) #+ 1j*float(B[k][t].imag)
+        # if B[k][t].real < 0 and abs(B[k][t].real) > 0.1:
+        #     print(B[k][t].real)
+
+
+##Plotting the streamlines
+fig,ax1 = plt.subplots(figsize=(20,20)) 
+plt.rcParams.update({'font.size':16})
+plt.rcParams['contour.negative_linestyle'] = 'solid'
+#plt.title('Streamfunction')
+#fig.add_subplot(1,1,1)
+#plt.contourf(Y,Z,psi,np.arange(-300,305,5),cmap='seismic')
+CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k')
+#plt.clabel(CS, fontsize=9, inline=True)
+#plt.colorbar(label='m/s')
+plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
+#plt.contourf(Y,Z,psi,cmap='seismic')
+jk = 20
+# q = plt.quiver(Yplot[::jk,::jk],Zplot[::jk,::jk],Vplot[::jk,::jk],Wplot[::jk,::jk],scale=50,angles="xy")
+# plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
+# plt.streamplot(Yplot,Zplot,Vplot,Wplot,density = 3,arrowstyle='->',arrowsize = 1.5)
+# plt.xlabel("Y axis [m]")
+# plt.ylabel("Height [m]")
+#plt.xlim([-5000,5000])
+plt.xlim([float(-L),float(L)])
+plt.ylim([0,1500])
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+plt.subplots_adjust(bottom=0.07, top=0.99, hspace=0.1,right=0.98,left=0.05)
+nameoffigure = 'streamlines.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+#plt.show()
+plt.close()
+
+
+
+#Calculating the U* and plotting it  
+Ustar = np.ones_like(y)*[mpf(0)]
+ympf = y*[mpf(1)]
+for k in range(-K,K+1):
+    for t in range(0,len(y)):
+        Ustar[t] = Ustar[t] +  1j*Eq[Eqi.index(k)] * mp.sin(mpf(2) * mpf(k) * pizao * ympf[t] / L)/mp.cos(alpha)
+
+
+Ustarplot = np.ones_like(Ustar)*[mpf(0)]
+for t in range(0,len(y)):
+    Ustarplot[t] = float(Ustar[t].real)
+
+        
+##Plotting U* and streamlines
+fig = plt.figure(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+
+
+fig.add_subplot(2,1,1)
+#plt.title('U star plot')
+plt.plot(y,Ustarplot)
+plt.xlabel("Y [m]")
+plt.ylabel('U$^{\u2605}_\infty$ [m s$^{-1}$]')
+#plt.xlim([-5000,5000])
+plt.xlim([float(-L),float(L)])
+#plt.ylim([-6,2])
+plt.ylim([-18,10])
+plt.grid('True')
+
+fig.add_subplot(2,1,2)
+#CS = plt.contour(Y,Z,psi,50,colors='k')
+CS = plt.contour(Yplot,Zplot,psiplot,30,colors='k')
+#plt.clabel(CS, fontsize=9, inline=True)
+#plt.colorbar(label='m/s')
+plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
+#plt.contourf(Y,Z,psi,cmap='seismic')
+#jk = 20
+#q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
+#plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
+#plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
+#plt.xlim([-5000,5000])
+plt.xlim([float(-L),float(L)])
+plt.ylim([0,1500])
+nameoffigure = 'Ustar.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+#plt.show()
 plt.close()
 
 
