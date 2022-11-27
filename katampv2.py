@@ -967,7 +967,7 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 70
+K = 90
 alpha = mpf(0.1) 
 visc = mpf(5)     
 diff = mpf(5)     
@@ -1727,6 +1727,162 @@ nameoffigure = 'Uwind.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 #plt.show()
+plt.close()
+
+
+
+#Now, we need to get the values of the W wind 
+#z = np.arange(0,2010,10) 
+#y = np.arange(-5000,5050,50) 
+#Y,Z = np.meshgrid(y,z)
+W = np.ones_like(Y)*[mpf(0)]
+
+
+for k in range(-K,K+1):
+    
+    R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+    
+    Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+    
+    S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+    S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+    
+    phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+    Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+    
+    m1 = - mp.sqrt(S1 + S2)
+    m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+    m3 = mp.conj(m2)
+    
+    for i in range(0,len(Y)):
+        for t in range(0,len(Y[0])):
+            if k != 0:
+                W[i][t] = W[i][t] + mp.cos(alpha)/visc * mpf(4)*mpf(k)**2 *pizao**2 / L**2 * (1j*Ek[Eki.index(k)]*mp.exp(m1*Z[i][t])/(m1**4) + Ck[Cki.index(k)]*mp.exp(m2*Z[i][t])/(m2**4)  + Dk[Dki.index(k)]*mp.exp(m3*Z[i][t])/(m3**4)   ) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L) +  mp.tan(alpha)*(1j*Eq[Eqi.index(k)] * mp.sin(mpf(2) * mpf(k) * pizao * Y[i][t] / L) )
+            else:
+                W[i][t] = W[i][t] + mp.tan(alpha)*(1j*Eq[Eqi.index(k)] * mp.sin(mpf(2) * mpf(k) * pizao * Y[i][t] / L) )
+        
+
+
+for k in range(0,W.shape[0]):
+    for t in range(0,W.shape[1]):
+        if Z[k][t] < H(Y[k][t]):
+            W[k][t] = np.nan
+        if Z[k][t] == H(Y[k][t]):
+            print (W[k][t], "W value at ground")
+#        if abs(Z[k][t] - H(Y[k][t])) < 0.1:
+#            if W[k][t] > 0.1:
+#                print (W[k][t],'fudeu geral -------------------------------------------------')
+##            print (W[k][t], Z[k][t], H(Y[k][t]), Y[k][t], '-----------------------------------------------------------------------------' )
+
+
+Yplot,Zplot = np.meshgrid(y,z)
+Wplot = np.ones_like(W)*[mpf(0)]
+for k in range(0,len(W)):
+    for t in range(0,len(W[0])):
+        Wplot[k][t] = float(W[k][t].real) #+ 1j*float(B[k][t].imag)
+        # if B[k][t].real < 0 and abs(B[k][t].real) > 0.1:
+        #     print(B[k][t].real)
+           
+
+##Plotting the W wind
+fig,ax1 = plt.subplots(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+plt.title(r'W$_\max$ = 5 m $\rms^{-1}$        W$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
+plt.contourf(Yplot,Zplot,Wplot,np.arange(-6,6.2,0.2),cmap='seismic')
+#plt.contourf(Y,Z,W,cmap='seismic')
+#plt.colorbar(label='[$ms^{-1}$]')
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
+plt.xlim([float(-L),float(L)])
+plt.ylim([0,1500])
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+nameoffigure = 'Wwind.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+#plt.show()
+plt.close()
+
+
+
+#Now, we need to get the values of the pressure 
+#z = np.arange(0,2010,10) 
+#y = np.arange(-5000,5050,50) 
+#Y,Z = np.meshgrid(y,z)
+P = np.ones_like(Y)*[mpf(0)]
+
+
+for k in range(-K,K+1):
+    
+    R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+    
+    Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+    
+    S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+    S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+    
+    phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+    Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+    
+    m1 = - mp.sqrt(S1 + S2)
+    m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+    m3 = mp.conj(m2)
+    
+    for i in range(0,len(Y)):
+        for t in range(0,len(Y[0])):
+            if k != 0:
+                P[i][t] = P[i][t] + mp.cos(alpha) * 1j *Ek[Eki.index(k)] / m1 * mp.exp(m1*Z[i][t]) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)
+            P[i][t] = P[i][t] + mp.cos(alpha) * (Ck[Cki.index(k)] / m2 * mp.exp(m2*Z[i][t]) + Dk[Dki.index(k)] / m3 * mp.exp(m3*Z[i][t])) * mp.exp(2j * mpf(k) * pizao * Y[i][t] / L)
+
+
+for k in range(0,P.shape[0]):
+    for t in range(0,P.shape[1]):
+        if Z[k][t] < H(Y[k][t]):
+            P[k][t] = np.nan
+        if Z[k][t] == H(Y[k][t]):
+            print (P[k][t], "P value at ground")
+        
+            
+
+Yplot,Zplot = np.meshgrid(y,z)
+Pplot = np.ones_like(P)*[mpf(0)]
+for k in range(0,len(P)):
+    for t in range(0,len(P[0])):
+        Pplot[k][t] = float(P[k][t].real) #+ 1j*float(B[k][t].imag)
+        # if B[k][t].real < 0 and abs(B[k][t].real) > 0.1:
+        #     print(B[k][t].real)
+        
+            
+
+##Plotting the pressure
+fig,ax1 = plt.subplots(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+plt.title(r'P$_\max$ = 5 $\rmm^{2}$ $\rms^{-2}$        P$_\min$ = 5 $\rmm^{2}$ $\rms^{-2}$',x=0.5, y=1.02)
+plt.contourf(Yplot,Zplot,Pplot,np.arange(-15,15.5,0.5),cmap='seismic')
+#plt.contourf(Y,Z,P,cmap='seismic')
+plt.colorbar()
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
+#plt.xlim([-10000,10000])
+plt.xlim([float(-L),float(L)])
+plt.ylim([0,1500])
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+nameoffigure = 'pressure.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.show()
 plt.close()
 
 
