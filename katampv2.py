@@ -1913,11 +1913,11 @@ for k in range(-K,K+1):
     
     def f1r(y):
         return (mp.exp(m1 * H(y)) * mp.cos(mpf(2) * mpf(- k) * pizao * y / L) )
-    gamma1k = mpf(2)/L * mp.quad(f1r,[0,L/2])
+    gamma1k = mpf(2)/L * mp.quad(f1r,[0,L/mpf(2)])
         
     def f2r(y):
         return (mp.exp(m2 * H(y)) * mp.cos(mpf(2) * mpf(- k) * pizao * y / L) )
-    gamma2k = mpf(2)/L * mp.quad(f2r,[0,L/2])
+    gamma2k = mpf(2)/L * mp.quad(f2r,[0,L/mpf(2)])
     
     for i in range(0,len(Y)):
         for t in range(0,len(Y[0])):
@@ -2036,14 +2036,107 @@ plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 plt.close()
 
 
+#Getting Vinfinity
+Vinf=mpf(0)
+for k in range(-K,K+1):
+    
+    R = mpf(2) * N**2 * mp.cos(alpha)**2 / (visc * diff) * (mpf(k) * pizao / L)**2
+    
+    Q = N**2 * mp.sin(alpha)**2 / (mpf(3) * visc * diff)
+    
+    S1 = abs(R + mp.sqrt(Q**3 + R**2) )**(1/3)
+    S2 = - abs( mp.sqrt(Q**3 + R**2) -R )**(1/3)
+    
+    phi = mp.sqrt(S1**2 + S2**2 - S1*S2)
+    Lk = mp.acos(- (S1 + S2)/ (2 * phi) )
+    
+    m1 = - mp.sqrt(S1 + S2)
+    m2 = - mp.sqrt(phi) * mp.exp(1j * Lk/2)
+    m3 = mp.conj(m2)
+    
+    
+    def f1r(y):
+        return (mp.exp(m1 * H(y)) * mp.cos(mpf(2) * mpf(- k) * pizao * y / L) )
+    gamma1k = mpf(2)/L * mp.quad(f1r,[0,L/mpf(2)])
+        
+    def f2r(y):
+        return (mp.exp(m2 * H(y)) * mp.cos(mpf(2) * mpf(- k) * pizao * y / L) )
+    gamma2k = mpf(2)/L * mp.quad(f2r,[0,L/mpf(2)])
+    
+    if k != 0:
+        Vinf = Vinf + ( mp.cos(alpha) / visc * mpf(2) * mpf(k) * pizao / L * ( Ek[Eki.index(k)] * gamma1k / m1**3 + mpf(2) * (Ck[Cki.index(k)] * gamma2k / m2**3).imag  ) )
 
 
 
+#Testing whether V integral is constant with height
+Vintegral = []
+Hmax = 500
+for k in range(0,len(V)):
+    if Zplot[k][0] > Hmax:
+        Vsum = 0
+        for t in range(0,len(V[0])):
+            if (Yplot[k][t] >= float(-L/2) and Yplot[k][t] <= float(L/2)):
+                Vsum = Vsum + Vplot[k][t]*abs(Yplot[0][0]-Yplot[0][1])
+        Vintegral.append(Vsum)
+        #print (Z[k][0])
+print ("Max and min values of Vintegral", np.amax( Vintegral), np.amin( Vintegral))
+
+jato=10
+for k in range(0,len(Vintegral)):
+    print(Vintegral[k].real,500+jato,"m" )
+    jato = jato + 10
+        
+        
+#Testing whether W integral is constant with height
+Wintegral = []
+for k in range(0,len(W)):
+    if Zplot[k][0] > Hmax:
+        Wsum = 0
+        for t in range(0,len(Wplot[0])):
+            if (Yplot[k][t] >= float(-L/2) and Yplot[k][t] <= float(L/2)):
+                Wsum = Wsum + Wplot[k][t]*abs(Yplot[0][0]-Yplot[0][1])
+        Wintegral.append(Wsum)
+        #print (Z[k][0])
+print ("Max and min values of Wintegral", np.amax( Wintegral), np.amin( Wintegral))
+
+jato=10
+for k in range(0,len(Wintegral)):
+    print(Wintegral[k].real,500+jato,"m" )
+    jato = jato + 10      
         
         
         
-        
-        
-        
+#Testing whether Ustar integral is constant with height
+Ustsum = 0
+for t in range(0,len(y)):
+    if (y[t] >= float(-L/2) and y[t] <= float(L/2)):
+        Ustsum = Ustsum + Ustarplot[t]*abs(y[0]-y[1])
+print ("Ustar integral value", Ustsum)
+
+#Getting the U integral (not constant with height)
+Uintegral = []
+integralZ = []
+for k in range(0,len(U)):
+    if Zplot[k][0] > Hmax:
+        Usum = 0
+        for t in range(0,len(U[0])):
+            if (Yplot[k][t] >= float(-L/2) and Yplot[k][t] <= float(L/2)):
+                Usum = Usum + Uplot[k][t]*abs(Yplot[0][0]-Yplot[0][1])
+        Uintegral.append(Usum)
+        integralZ.append(z[k])
+        #print (Z[k][0])
+print ("Max and min values of Uintegral", np.amax( Uintegral), np.amin( Uintegral))
+
+
+
+
+
+
+
+
+
+
+
+
         
         
