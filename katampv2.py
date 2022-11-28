@@ -469,7 +469,8 @@ plt.title(r'U$_\max$ = 5 m $\rms^{-1}$        U$_\min$ = 5 m $\rms^{-1}$',x=0.5,
 plt.contourf(Yplot,Zplot,Uplot,np.arange(-25,26,1),cmap='seismic')
 #plt.contourf(Y,Z,U,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.ax.tick_params(length=14, width=1)
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
@@ -933,8 +934,8 @@ for k in range(0,len(Wstar_real)):
         Wstar_realplot[k][t] = float(Wstar_real[k][t].real) 
 
 
-Wstarplot = (Wstar_realplot).T
-fig = plt.figure(figsize=(10,10)) 
+Wstarplot = Wstar_realplot
+fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.title(r'W$_\max$ = 5 m $\rms^{-1}$        W$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Wstarplot,np.arange(-6,6.2,0.2),cmap='seismic')
@@ -945,7 +946,14 @@ plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
-nameoffigure = 'Wwind.png'
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+nameoffigure = 'Wstar.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
 #plt.show()
@@ -979,7 +987,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -1290,7 +1298,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 
 def Bsfc(y):
@@ -2190,14 +2198,14 @@ Y = Y * mpf(1)
 Z = Z * mpf(1)
 
 
-with open('/home/owner/Documents/katabatic_flows/variables/Ak.pickle', 'wb') as handle:
+with open('/home/owner/Documents/katabatic_flows/variables/Ek.pickle', 'wb') as handle:
     pickle.dump(Ek, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
     
 
 
-with open('/home/owner/Documents/katabatic_flows/variables/Aki.pickle', 'wb') as handle:
+with open('/home/owner/Documents/katabatic_flows/variables/Eki.pickle', 'wb') as handle:
     pickle.dump(Eki, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
@@ -2280,12 +2288,12 @@ with open('/home/owner/Documents/katabatic_flows/variables/psi.pickle', 'wb') as
     
 ####################################################################################################################################
 
-with open('/home/owner/Documents/katabatic_flows/variables/Ak.pickle', 'rb') as handle:
-    Ak = pickle.load(handle)
+with open('/home/owner/Documents/katabatic_flows/variables/Ek.pickle', 'rb') as handle:
+    Ek = pickle.load(handle)
     
 
-with open('/home/owner/Documents/katabatic_flows/variables/Aki.pickle', 'rb') as handle:
-    Aki = pickle.load(handle)
+with open('/home/owner/Documents/katabatic_flows/variables/Eki.pickle', 'rb') as handle:
+    Eki = pickle.load(handle)
     
 
 with open('/home/owner/Documents/katabatic_flows/variables/Ck.pickle', 'rb') as handle:
