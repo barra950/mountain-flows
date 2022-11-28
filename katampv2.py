@@ -967,7 +967,7 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 90
+K = 70
 alpha = mpf(0.1) 
 visc = mpf(5)     
 diff = mpf(5)     
@@ -2070,7 +2070,7 @@ for k in range(-K,K+1):
 
 #Testing whether V integral is constant with height
 Vintegral = []
-Hmax = 500
+Hmax = 400
 for k in range(0,len(V)):
     if Zplot[k][0] > Hmax:
         Vsum = 0
@@ -2083,7 +2083,7 @@ print ("Max and min values of Vintegral", np.amax( Vintegral), np.amin( Vintegra
 
 jato=10
 for k in range(0,len(Vintegral)):
-    print(Vintegral[k].real,500+jato,"m" )
+    print(Vintegral[k].real,Hmax+jato,"m" )
     jato = jato + 10
         
         
@@ -2101,7 +2101,7 @@ print ("Max and min values of Wintegral", np.amax( Wintegral), np.amin( Wintegra
 
 jato=10
 for k in range(0,len(Wintegral)):
-    print(Wintegral[k].real,500+jato,"m" )
+    print(Wintegral[k].real,Hmax+jato,"m" )
     jato = jato + 10      
         
         
@@ -2128,10 +2128,25 @@ for k in range(0,len(U)):
 print ("Max and min values of Uintegral", np.amax( Uintegral), np.amin( Uintegral))
 
 
+#Getting the B integral
+Bintegral = []
+for k in range(0,len(B)):
+    if Zplot[k][0] > Hmax:
+        Bsum = 0
+        for t in range(0,len(B[0])):
+            if (Yplot[k][t] >= float(-L/2) and Yplot[k][t] <= float(L/2)):
+                Bsum = Bsum + Bplot[k][t]*abs(Yplot[0][0]-Yplot[0][1])
+        Bintegral.append(Bsum)
+        #print (Z[k][0])
+print ("Max and min values of Bintegral", np.amax( Bintegral), np.amin( Bintegral))
 
 
-
-
+#Testing wether C is a constant
+Uintegral = np.array(Uintegral)
+integralZ = np.array(integralZ)
+Bintegral = np.array(Bintegral)
+delta = float((4*visc*diff)**(1/4)) / np.sqrt(float(N) * float(mp.sin(alpha)))
+Cconst = np.sqrt( np.exp(2 * integralZ/delta) * (Bintegral**2 + float(visc/diff) * float(N)**2 * Uintegral**2 ) )
 
 
 
