@@ -2149,9 +2149,313 @@ delta = float((4*visc*diff)**(1/4)) / np.sqrt(float(N) * float(mp.sin(alpha)))
 Cconst = np.sqrt( np.exp(2 * integralZ/delta) * (Bintegral**2 + float(visc/diff) * float(N)**2 * Uintegral**2 ) )
 
 
+#%%
+
+import pickle
+import mpmath
+from mpmath import *
+from mpmath import mp
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+import numpy as np
+from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+
+dps_value = 100
+
+mp.dps = dps_value
+
+
+K = 70
+alpha = mpf(0.1) 
+visc = mpf(5)     
+diff = mpf(5)     
+N = mpf(0.01)    
+L = mpf(1000)
+
+subdivisions = 100
+
+pizao = mp.pi(dps=dps_value)
+
+def H(y):
+    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+
+
+def Bsfc(y):
+    return mpf(0.1) * mp.sin(mpf(2) * pizao * y/L)
+
+z = np.arange(0,2010,10) 
+y = np.arange(-float(L),float(L)+10,10) 
+Y,Z = np.meshgrid(y,z)
+Y = Y * mpf(1)
+Z = Z * mpf(1)
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/Ak.pickle', 'wb') as handle:
+    pickle.dump(Ek, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+    
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/Aki.pickle', 'wb') as handle:
+    pickle.dump(Eki, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+    
+    
+    
+with open('/home/owner/Documents/katabatic_flows/variables/Ck.pickle', 'wb') as handle:
+    pickle.dump(Ck, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    
+    
+    
+with open('/home/owner/Documents/katabatic_flows/variables/Cki.pickle', 'wb') as handle:
+    pickle.dump(Cki, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 
 
+
+with open('/home/owner/Documents/katabatic_flows/variables/Dk.pickle', 'wb') as handle:
+    pickle.dump(Dk, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/Dki.pickle', 'wb') as handle:
+    pickle.dump(Dki, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    
+    
+       
+
+with open('/home/owner/Documents/katabatic_flows/variables/B.pickle', 'wb') as handle:
+    pickle.dump(B, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+ 
+    
+ 
+with open('/home/owner/Documents/katabatic_flows/variables/V.pickle', 'wb') as handle:
+    pickle.dump(V, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/VlargeY.pickle', 'wb') as handle:
+    pickle.dump(V, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/U.pickle', 'wb') as handle:
+    pickle.dump(U, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    
+    
+with open('/home/owner/Documents/katabatic_flows/variables/Eq.pickle', 'wb') as handle:
+    pickle.dump(Eq, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    
+    
+with open('/home/owner/Documents/katabatic_flows/variables/Eqi.pickle', 'wb') as handle:
+    pickle.dump(Eqi, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+ 
+with open('/home/owner/Documents/katabatic_flows/variables/W.pickle', 'wb') as handle:
+    pickle.dump(W, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+    
+with open('/home/owner/Documents/katabatic_flows/variables/WlargeY.pickle', 'wb') as handle:
+    pickle.dump(W, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/P.pickle', 'wb') as handle:
+    pickle.dump(P, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/psi.pickle', 'wb') as handle:
+    pickle.dump(psi, handle, protocol=pickle.HIGHEST_PROTOCOL)
+    
+    
+####################################################################################################################################
+
+with open('/home/owner/Documents/katabatic_flows/variables/Ak.pickle', 'rb') as handle:
+    Ak = pickle.load(handle)
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/Aki.pickle', 'rb') as handle:
+    Aki = pickle.load(handle)
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/Ck.pickle', 'rb') as handle:
+    Ck = pickle.load(handle)
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/Cki.pickle', 'rb') as handle:
+    Cki = pickle.load(handle)   
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/Dk.pickle', 'rb') as handle:
+    Dk = pickle.load(handle)
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/Dki.pickle', 'rb') as handle:
+    Dki = pickle.load(handle)
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/B.pickle', 'rb') as handle:
+    B = pickle.load(handle)
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/V.pickle', 'rb') as handle:
+    V = pickle.load(handle)
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/VlargeY.pickle', 'rb') as handle:
+    V = pickle.load(handle)
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/U.pickle', 'rb') as handle:
+    U = pickle.load(handle)
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/Eq.pickle', 'rb') as handle:
+    Eq = pickle.load(handle)
+    
+    
+with open('/home/owner/Documents/katabatic_flows/variables/Eqi.pickle', 'rb') as handle:
+    Eqi = pickle.load(handle)
+ 
+    
+with open('/home/owner/Documents/katabatic_flows/variables/W.pickle', 'rb') as handle:
+    W = pickle.load(handle)
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/WlargeY.pickle', 'rb') as handle:
+    W = pickle.load(handle)
+
+
+with open('/home/owner/Documents/katabatic_flows/variables/P.pickle', 'rb') as handle:
+    P = pickle.load(handle)
+    
+
+with open('/home/owner/Documents/katabatic_flows/variables/psi.pickle', 'rb') as handle:
+    psi = pickle.load(handle)
+
+
+#%%
+#Calculating some equations
+zmp = z * mpf(1)
+du2dz2=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):   
+        du2dz2[k,t] = ( U[k+1,t] - mpf(2)*U[k,t] + U[k-1,t] ) / abs(zmp[k]-zmp[k+1])**2
+
+term1 = -B[1:-1,:]*mp.sin(alpha)
+term2 = visc*du2dz2[1:-1,:]
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum)
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '666666666666666666666666666666666666666666')
+    
+########################################################################################################################################################################
+
+zmp = z * mpf(1)
+dv2dz2=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):
+        dv2dz2[k,t] = ( V[k+1,t] - mpf(2)*V[k,t] + V[k-1,t] ) / abs(zmp[k]-zmp[k+1])**2
+
+ymp = y * mpf(1)
+dpdy=np.ones_like(Y)*[mpf(0)]
+for k in range(1,len(y)-1):
+    for t in range(0,len(z)):
+        dpdy[t,k] = ( P[t,k+1] - P[t,k-1] ) / abs(ymp[k-1]-ymp[k+1])
+    
+term1 = -dpdy[1:-1,1:-1]
+term2 = visc*dv2dz2[1:-1,1:-1]
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum)
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '77777777777777777777777777777777777777')   
+             
+########################################################################################################################################################################        
+
+zmp = z * mpf(1)        
+dpdz=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):
+        dpdz[k,t] = ( P[k+1,t] - P[k-1,t] ) / abs(zmp[k-1]-zmp[k+1])
+
+term1 = -dpdz[1:-1,:] 
+term2 = B[1:-1,:]*mp.cos(alpha)
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum)
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '99999999999999999999999999999')       
+        
+#############################################################################################################################################################        
+
+zmp = z * mpf(1)         
+db2dz2=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):
+        db2dz2[k,t] = ( B[k+1,t] - mpf(2)*B[k,t] + B[k-1,t] ) / abs(zmp[k]-zmp[k+1])**2
+
+term1 = N**2 * (U[1:-1,:]*mp.sin(alpha) - W[1:-1,:]*mp.cos(alpha))
+term2 = diff*db2dz2[1:-1,:]
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum)
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '8888888888888888888888888888888888888' )       
+
+
+#############################################################################################################################################################       
+        
+ymp = y * mpf(1)       
+dvdy=np.ones_like(Y)*[mpf(0)]
+for k in range(1,len(y)-1):
+    for t in range(0,len(z)):
+        dvdy[t,k] = ( V[t,k+1] - V[t,k-1] ) / abs(ymp[k-1]-ymp[k+1])
+
+zmp = z * mpf(1)    
+dwdz=np.ones_like(Z)*[mpf(0)]
+for k in range(1,len(z)-1):
+    for t in range(0,len(y)):
+        dwdz[k,t] = ( W[k+1,t] - W[k-1,t] ) / abs(zmp[k-1]-zmp[k+1])
+
+
+term1 = dvdy[1:-1,1:-1]
+term2 = dwdz[1:-1,1:-1]  
+
+sumterms = term1 + term2
+final_sum = []
+for k in range(0,len(sumterms)):
+    for t in range(0,len(sumterms[0])):
+        final_sum.append(float(sumterms[k][t].real) + 1j*float(sumterms[k][t].imag))
+final_sum = np.array(final_sum) 
+
+print (np.nanmax(final_sum) , np.nanmin(final_sum) , '55555555555555555555555555555555555555555555555555') 
         
         
