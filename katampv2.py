@@ -258,7 +258,8 @@ plt.title(r'B$_\max$ = 5 m $\rms^{-2}$        B$_\min$ = 5 m $\rms^{-2}$',x=0.5,
 plt.contourf(Yplot,Zplot,Bplot,np.arange(-0.1,0.11,0.01),cmap='seismic')
 #plt.contourf(Y,Z,B,cmap='seismic')
 #plt.colorbar(label='[$ms^{-2}$]')
-plt.colorbar(ticks=np.arange(-0.1,0.12,0.02))
+cbar = plt.colorbar(ticks=np.arange(-0.1,0.12,0.02))
+cbar.ax.tick_params(length=14, width=1)
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
@@ -346,7 +347,8 @@ plt.title(r'V$_\max$ = 5 m $\rms^{-2}$        V$_\min$ = 5 m $\rms^{-2}$',x=0.5,
 plt.contourf(Yplot,Zplot,Vplot,np.arange(-7,7.03,0.03),cmap='seismic')
 #plt.contourf(Y,Z,V,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.ax.tick_params(length=14, width=1)
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
@@ -557,7 +559,8 @@ plt.title(r'W$_\max$ = 5 m $\rms^{-1}$        W$_\min$ = 5 m $\rms^{-1}$',x=0.5,
 plt.contourf(Yplot,Zplot,Wplot,np.arange(-6,6.2,0.2),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.ax.tick_params(length=14, width=1)
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([float(-L),float(L)])
@@ -630,7 +633,8 @@ plt.rcParams.update({'font.size':16})
 plt.title(r'P$_\max$ = 5 $\rmm^{2}$ $\rms^{-2}$        P$_\min$ = 5 $\rmm^{2}$ $\rms^{-2}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Pplot,np.arange(-15,15.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.ax.tick_params(length=14, width=1)
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 #plt.xlim([-10000,10000])
@@ -927,6 +931,47 @@ plt.grid(True)
 
 #Plotting the Wstar_real 
 
+# Yplot,Zplot = np.meshgrid(y,z)
+# Wstar_realplot = np.ones_like(Wstar_real)*[mpf(0)]
+# for k in range(0,len(Wstar_real)):
+#     for t in range(0,len(Wstar_real[0])):
+#         Wstar_realplot[k][t] = float(Wstar_real[k][t].real) 
+
+
+# Wstarplot = Wstar_realplot
+# fig,ax1 = plt.subplots(figsize=(10,10)) 
+# plt.rcParams.update({'font.size':16})
+# plt.title(r'W$_\max$ = 5 m $\rms^{-1}$        W$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
+# plt.contourf(Yplot,Zplot,Wstarplot,np.arange(-6,6.2,0.2),cmap='seismic')
+# #plt.contourf(Y,Z,W,cmap='seismic')
+# #plt.colorbar(label='[$ms^{-1}$]')
+# plt.colorbar()
+# plt.xlabel("Y [m]")
+# plt.ylabel("Z [m]")
+# plt.xlim([float(-L),float(L)])
+# plt.ylim([0,1500])
+
+# ax1.tick_params('both', length=14, width=1, which='major')
+# ax1.tick_params('both', length=7, width=1, which='minor')
+
+# ax1.minorticks_on()
+# ax1.xaxis.set_tick_params(which='minor', bottom=False)
+# ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+# nameoffigure = 'Wstar.png'
+# string_in_string = "{}".format(nameoffigure)
+# plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+# #plt.show()
+# plt.close()
+
+
+#Plotting the Wstar_real 
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+import matplotlib.cbook as cbook
+from matplotlib import cm
+
 Yplot,Zplot = np.meshgrid(y,z)
 Wstar_realplot = np.ones_like(Wstar_real)*[mpf(0)]
 for k in range(0,len(Wstar_real)):
@@ -935,29 +980,30 @@ for k in range(0,len(Wstar_real)):
 
 
 Wstarplot = Wstar_realplot
-fig,ax1 = plt.subplots(figsize=(10,10)) 
-plt.rcParams.update({'font.size':16})
-plt.title(r'W$_\max$ = 5 m $\rms^{-1}$        W$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
-plt.contourf(Yplot,Zplot,Wstarplot,np.arange(-6,6.2,0.2),cmap='seismic')
+fig, ax = plt.subplots(figsize=(10,10), constrained_layout=True) 
+#ax = ax.flatten()
+
+#bounds = np.array([-1,-0.75,-0.5,-0.25, 0, 1, 2,3,4])
+norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
+
+pcm = plt.pcolormesh(Yplot,Zplot,Yploy,norm=norm,cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
-plt.colorbar()
+fig.colorbar(pcm, ax=ax, extend='both', orientation='vertical')
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
 
-ax1.tick_params('both', length=14, width=1, which='major')
-ax1.tick_params('both', length=7, width=1, which='minor')
-
-ax1.minorticks_on()
-ax1.xaxis.set_tick_params(which='minor', bottom=False)
-ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 nameoffigure = 'Wstar.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
-#plt.show()
-plt.close()
+plt.show()
+
+
+
+
+
 
 #%%
 
@@ -1452,7 +1498,7 @@ Ek = np.array(Ek)
 
 #Getting the Buoyancy value
 
-z = np.arange(0,2010,10) 
+z = np.arange(0,2001,1) 
 y = np.arange(-float(L),float(L)+10,10) 
 Y,Z = np.meshgrid(y,z)
 Y = Y * mpf(1)
@@ -2185,7 +2231,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 
 def Bsfc(y):
