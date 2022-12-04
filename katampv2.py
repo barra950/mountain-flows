@@ -5,6 +5,9 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import numpy as np
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+import matplotlib.colors as colors
+import matplotlib.cbook as cbook
+from matplotlib import cm
 
 #Solving the equations for the even case
 dps_value = 100
@@ -929,71 +932,61 @@ ax1.set_yticks(np.arange(0,1600,100))
 ax1.tick_params('both', length=10, width=1, which='major')
 plt.grid(True)
 
-#Plotting the Wstar_real 
-
-# Yplot,Zplot = np.meshgrid(y,z)
-# Wstar_realplot = np.ones_like(Wstar_real)*[mpf(0)]
-# for k in range(0,len(Wstar_real)):
-#     for t in range(0,len(Wstar_real[0])):
-#         Wstar_realplot[k][t] = float(Wstar_real[k][t].real) 
-
-
-# Wstarplot = Wstar_realplot
-# fig,ax1 = plt.subplots(figsize=(10,10)) 
-# plt.rcParams.update({'font.size':16})
-# plt.title(r'W$_\max$ = 5 m $\rms^{-1}$        W$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
-# plt.contourf(Yplot,Zplot,Wstarplot,np.arange(-6,6.2,0.2),cmap='seismic')
-# #plt.contourf(Y,Z,W,cmap='seismic')
-# #plt.colorbar(label='[$ms^{-1}$]')
-# plt.colorbar()
-# plt.xlabel("Y [m]")
-# plt.ylabel("Z [m]")
-# plt.xlim([float(-L),float(L)])
-# plt.ylim([0,1500])
-
-# ax1.tick_params('both', length=14, width=1, which='major')
-# ax1.tick_params('both', length=7, width=1, which='minor')
-
-# ax1.minorticks_on()
-# ax1.xaxis.set_tick_params(which='minor', bottom=False)
-# ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
-# nameoffigure = 'Wstar.png'
-# string_in_string = "{}".format(nameoffigure)
-# plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
-# #plt.show()
-# plt.close()
-
 
 #Plotting the Wstar_real 
 
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.colors as colors
-import matplotlib.cbook as cbook
-from matplotlib import cm
+interval = 10
+boundsl = []
+for k in range(-interval,interval+1):
+    if k < 0:
+        boundsl.append(0.5/interval*k)
+    if k > 0:
+        boundsl.append(5/interval*k)
+    if k ==0:
+        boundsl.append(k)
+bounds = np.array(boundsl)
+
 
 Yplot,Zplot = np.meshgrid(y,z)
 Wstar_realplot = np.ones_like(Wstar_real)*[mpf(0)]
 for k in range(0,len(Wstar_real)):
     for t in range(0,len(Wstar_real[0])):
         Wstar_realplot[k][t] = float(Wstar_real[k][t].real) 
+ 
+# Yploy = Yplot
+# for k in range(0,W.shape[0]):
+#     for t in range(0,W.shape[1]):
+#         if Wstarplot[k][t] == nan:
+#             Yploy[k][t] = 0
+#         else:
+#             Yploy[k][t] = Wstarplot[k][t]
 
 
 Wstarplot = Wstar_realplot
-fig, ax = plt.subplots(figsize=(10,10), constrained_layout=True) 
-#ax = ax.flatten()
+fig, ax1 = plt.subplots(figsize=(10,10)) 
+plt.title(r'W$^{\bigstar}_\max$ = 5 m $\rms^{-1}$        W$^{\bigstar}_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
+plt.rcParams.update({'font.size':16})
 
-#bounds = np.array([-1,-0.75,-0.5,-0.25, 0, 1, 2,3,4])
 norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
 
-pcm = plt.pcolormesh(Yplot,Zplot,Yploy,norm=norm,cmap='seismic')
-#plt.contourf(Y,Z,W,cmap='seismic')
-#plt.colorbar(label='[$ms^{-1}$]')
-fig.colorbar(pcm, ax=ax, extend='both', orientation='vertical')
+# pcm = plt.pcolormesh(Yplot,Zplot,Yploy,norm=norm,cmap='seismic')
+
+pcm = plt.contourf(Yplot,Zplot,Wstarplot,norm=norm,cmap='seismic',levels=bounds)
+
+cbar = fig.colorbar(pcm)
+cbar.ax.tick_params(length=14, width=1)
+
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([float(-L),float(L)])
 plt.ylim([0,1500])
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 
 nameoffigure = 'Wstar.png'
 string_in_string = "{}".format(nameoffigure)
@@ -1015,6 +1008,9 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import numpy as np
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+import matplotlib.colors as colors
+import matplotlib.cbook as cbook
+from matplotlib import cm
 
 dps_value = 100
 
