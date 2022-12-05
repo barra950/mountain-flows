@@ -15,7 +15,7 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 90
+K = 70
 alpha = mpf(0.1) 
 visc = mpf(5)     
 diff = mpf(5)     
@@ -27,7 +27,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(350) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(100) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -941,7 +941,7 @@ for k in range(-interval,interval+1):
     if k < 0:
         boundsl.append(0.5/interval*k)
     if k > 0:
-        boundsl.append(5/interval*k)
+        boundsl.append(7/interval*k)
     if k ==0:
         boundsl.append(k)
 bounds = np.array(boundsl)
@@ -991,7 +991,8 @@ ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 nameoffigure = 'Wstar.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
-plt.show()
+#plt.show()
+plt.close()
 
 
 
@@ -1029,7 +1030,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(100) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -1314,6 +1315,7 @@ print (np.nanmax(final_sum) , np.nanmin(final_sum) , '55555555555555555555555555
 
 #%%
 
+import pickle
 import mpmath
 from mpmath import *
 from mpmath import mp
@@ -1321,6 +1323,9 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import numpy as np
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+import matplotlib.colors as colors
+import matplotlib.cbook as cbook
+from matplotlib import cm
 
 #Solving the equations for the odd case
 dps_value = 100
@@ -2199,6 +2204,101 @@ delta = float((4*visc*diff)**(1/4)) / np.sqrt(float(N) * float(mp.sin(alpha)))
 Cconst = np.sqrt( np.exp(2 * integralZ/delta) * (Bintegral**2 + float(visc/diff) * float(N)**2 * Uintegral**2 ) )
 
 
+#Plotting the theta angle
+Ustar_real = U * mp.cos(alpha) + W * mp.sin(alpha)
+Wstar_real = - U * mp.sin(alpha) + W * mp.cos(alpha)
+theta = np.ones_like(U)*[mpf(0)]
+for k in range(0,len(theta)):
+    for t in range(0,len(theta[0])):
+        theta[k][t] = mp.acos( abs(Ustar_real[k][t] / mp.sqrt(U[k][t]**2 + W[k][t]**2 )))
+theta = theta * mpf(180) / pizao
+
+Yplot,Zplot = np.meshgrid(y,z)
+thetaplot = np.ones_like(theta)*[mpf(0)]
+thetaplot_sign = np.ones_like(theta)*[mpf(0)]
+for k in range(0,len(theta)):
+    for t in range(0,len(theta[0])):
+        thetaplot[k][t] = float(theta[k][t].real) #+ 1j*float(theta[k][t].imag)
+        thetaplot_sign[k][t] = float(theta[k][t].real * abs(Wstar_real[k][t].real)/Wstar_real[k][t].real)
+        
+#Plotting the theta angle vs height at y=0 
+thetaplotf = (thetaplot).T
+thetaplotf2 = (thetaplot_sign).T 
+fig,ax1 = plt.subplots(figsize=(10,10)) 
+plt.rcParams.update({'font.size':16})
+ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
+plt.xlabel(r"$\rm\theta$ [$\rm^{o}$]")
+plt.ylabel("Height [m]")
+plt.xlim([-0.5,6])
+ax1.set_ylim([0,1500])
+ax1.set_xticks(np.arange(-0.5,6.5,0.5))
+ax1.set_yticks(np.arange(0,1600,100))
+ax1.tick_params('both', length=10, width=1, which='major')
+plt.grid(True)
+
+
+#Plotting the Wstar_real 
+
+interval = 10
+boundsl = []
+for k in range(-interval,interval+1):
+    if k < 0:
+        boundsl.append(0.5/interval*k)
+    if k > 0:
+        boundsl.append(7/interval*k)
+    if k ==0:
+        boundsl.append(k)
+bounds = np.array(boundsl)
+
+
+Yplot,Zplot = np.meshgrid(y,z)
+Wstar_realplot = np.ones_like(Wstar_real)*[mpf(0)]
+for k in range(0,len(Wstar_real)):
+    for t in range(0,len(Wstar_real[0])):
+        Wstar_realplot[k][t] = float(Wstar_real[k][t].real) 
+ 
+# Yploy = Yplot
+# for k in range(0,W.shape[0]):
+#     for t in range(0,W.shape[1]):
+#         if Wstarplot[k][t] == nan:
+#             Yploy[k][t] = 0
+#         else:
+#             Yploy[k][t] = Wstarplot[k][t]
+
+
+Wstarplot = Wstar_realplot
+fig, ax1 = plt.subplots(figsize=(10,10)) 
+plt.title(r'W$^{\bigstar}_\max$ = 5 m $\rms^{-1}$        W$^{\bigstar}_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
+plt.rcParams.update({'font.size':16})
+
+norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
+
+# pcm = plt.pcolormesh(Yplot,Zplot,Yploy,norm=norm,cmap='seismic')
+
+pcm = plt.contourf(Yplot,Zplot,Wstarplot,norm=norm,cmap='seismic',levels=bounds)
+
+cbar = fig.colorbar(pcm)
+cbar.ax.tick_params(length=14, width=1)
+
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
+plt.xlim([float(-L),float(L)])
+plt.ylim([0,1500])
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+
+nameoffigure = 'Wstar.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+#plt.show()
+plt.close()
+
+
 #%%
 
 import pickle
@@ -2209,6 +2309,9 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import numpy as np
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
+import matplotlib.colors as colors
+import matplotlib.cbook as cbook
+from matplotlib import cm
 
 dps_value = 100
 
@@ -2227,7 +2330,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 
 def Bsfc(y):
