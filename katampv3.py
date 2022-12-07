@@ -257,7 +257,9 @@ for k in range(0,len(B)):
 ##Plotting the buoyancy
 fig,ax1 = plt.subplots(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
-plt.title(r'B$_\max$ = 5 m $\rms^{-2}$        B$_\min$ = 5 m $\rms^{-2}$',x=0.5, y=1.02)
+maxB = np.nanmax(Bplot)
+minB = np.nanmin(Bplot)
+plt.title(r'B$_\max$ = %(number).2f m $\rms^{-2}$        B$_\min$ = %(number2).2f m $\rms^{-2}$' % {"number": maxB, "number2": minB},x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Bplot,np.arange(-0.1,0.11,0.01),cmap='seismic')
 #plt.contourf(Y,Z,B,cmap='seismic')
 #plt.colorbar(label='[$ms^{-2}$]')
@@ -759,7 +761,7 @@ for t in range(0,len(y)):
     Ustarplot[t] = float(Ustar[t].real)
 
         
-##Plotting U* and streamlines
+##Plotting U* infinity
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 
@@ -774,22 +776,6 @@ plt.xlim([float(-L),float(L)])
 plt.ylim([-18,10])
 plt.grid('True')
 
-# fig.add_subplot(2,1,2)
-# #CS = plt.contour(Y,Z,psi,50,colors='k')
-# CS = plt.contour(Yplot,Zplot,psiplot,30,colors='k')
-# #plt.clabel(CS, fontsize=9, inline=True)
-# #plt.colorbar(label='m/s')
-# plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
-# #plt.contourf(Y,Z,psi,cmap='seismic')
-# #jk = 20
-# #q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
-# #plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
-# #plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
-# plt.xlabel("Y [m]")
-# plt.ylabel("Z [m]")
-# #plt.xlim([-5000,5000])
-# plt.xlim([float(-L),float(L)])
-# plt.ylim([0,1500])
 nameoffigure = 'Ustar.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
@@ -972,8 +958,10 @@ for k in range(0,len(Wstar_real)):
 
 Wstarplot = Wstar_realplot
 fig, ax1 = plt.subplots(figsize=(10,10)) 
-plt.title(r'W$^{\bigstar}_\max$ = 5 m $\rms^{-1}$        W$^{\bigstar}_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
 plt.rcParams.update({'font.size':16})
+maxWstar = np.nanmax(Wstarplot)
+minWstar = np.nanmin(Wstarplot)
+plt.title(r'W$^{\bigstar}_\max$ = %(number).2f m $\rms^{-1}$        W$^{\bigstar}_\min$ = %(number2).2f m $\rms^{-1}$' % {"number": maxWstar, "number2": minWstar},x=0.5, y=1.02)
 
 norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
 
