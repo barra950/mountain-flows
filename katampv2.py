@@ -633,7 +633,7 @@ for k in range(0,len(P)):
 ##Plotting the pressure
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title(r'P$_\max$ = 5 $\rmm^{2}$ $\rms^{-2}$        P$_\min$ = 5 $\rmm^{2}$ $\rms^{-2}$',x=0.5, y=1.02)
+plt.title(r'$\Pi_\max$ = 5 $\rmm^{2}$ $\rms^{-2}$        $\Pi_\min$ = 5 $\rmm^{2}$ $\rms^{-2}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Pplot,np.arange(-15,15.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
 cbar = plt.colorbar()
@@ -709,7 +709,7 @@ plt.rcParams['contour.negative_linestyle'] = 'solid'
 #plt.title('Streamfunction')
 #fig.add_subplot(1,1,1)
 #plt.contourf(Y,Z,psi,np.arange(-300,305,5),cmap='seismic')
-CS = plt.contour(Yplot,Zplot,psiplot,200,colors='k')
+CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k')
 #plt.clabel(CS, fontsize=9, inline=True)
 #plt.colorbar(label='m/s')
 plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
@@ -879,7 +879,7 @@ for k in range(0,len(U)):
 
 Bpplot2 = np.array(Bpplot).T
 Upplot2 = np.array(Upplot).T
-fig,ax1=plt.subplots()
+fig,ax1=plt.subplots(figsize=(10,10))
 #plt.xticks(maxtime, time2plot, rotation='vertical')
 plt.rcParams.update({'font.size':20})
 fsize = 20
@@ -887,7 +887,7 @@ fsize = 20
 ax1.set_ylim([-0.02,0.1])
 plt.xlabel('Z [m]',name='Arial',size=fsize)
 plt.ylabel(r'B [m $\rms^{-2}$]',name='Arial',size=fsize)
-plt.plot(z,Bpplot2[0][:],linewidth=3,color='b',label='Buoyancy')
+plt.plot(z,Bpplot2[0][:],linewidth=3,color='b',label='B')
 ax1.tick_params('both', length=10, width=1, which='major')
 ax2=ax1.twinx()
 ax2.set_ylim([-4,4])
@@ -896,8 +896,8 @@ plt.ylabel(r'U [m $\rms^{-1}$]',name='Arial',size=fsize)
 ax1.set_xlim([0,1000])
 ax1.set_xticks(np.arange(0,1100,100))
 ax2.tick_params('both', length=10, width=1, which='major')
-ax1.legend(bbox_to_anchor=(0.8, 0.95), loc='upper left', borderaxespad=0)
-ax2.legend(bbox_to_anchor=(0.8, 0.88), loc='upper left', borderaxespad=0)
+ax1.legend(bbox_to_anchor=(0.7, 0.95), loc='upper left', borderaxespad=0)
+ax2.legend(bbox_to_anchor=(0.7, 0.88), loc='upper left', borderaxespad=0)
 
         
 #Plotting the theta angle
@@ -922,9 +922,10 @@ thetaplotf = (thetaplot).T
 thetaplotf2 = (thetaplot_sign).T 
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
+ax1.plot([0,0],[0,1500],linewidth=2,color="k")
 ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
 plt.xlabel(r"$\rm\theta$ [$\rm^{o}$]")
-plt.ylabel("Height [m]")
+plt.ylabel("Z [m]")
 plt.xlim([-0.5,6])
 ax1.set_ylim([0,1500])
 ax1.set_xticks(np.arange(-0.5,6.5,0.5))
@@ -1030,7 +1031,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(100) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -1918,7 +1919,7 @@ for k in range(0,len(P)):
 ##Plotting the pressure
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title(r'P$_\max$ = 5 $\rmm^{2}$ $\rms^{-2}$        P$_\min$ = 5 $\rmm^{2}$ $\rms^{-2}$',x=0.5, y=1.02)
+plt.title(r'$\Pi_\max$ = 5 $\rmm^{2}$ $\rms^{-2}$        $\Pi_\min$ = 5 $\rmm^{2}$ $\rms^{-2}$',x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Pplot,np.arange(-15,15.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
 plt.colorbar()
@@ -2228,7 +2229,7 @@ fig,ax1 = plt.subplots(figsize=(10,10))
 plt.rcParams.update({'font.size':16})
 ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
 plt.xlabel(r"$\rm\theta$ [$\rm^{o}$]")
-plt.ylabel("Height [m]")
+plt.ylabel("Z [m]")
 plt.xlim([-0.5,6])
 ax1.set_ylim([0,1500])
 ax1.set_xticks(np.arange(-0.5,6.5,0.5))
@@ -2330,7 +2331,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 
 def Bsfc(y):
