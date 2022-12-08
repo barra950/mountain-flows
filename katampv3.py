@@ -5,9 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import numpy as np
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
-import matplotlib.colors as colors
-import matplotlib.cbook as cbook
-from matplotlib import cm
+
 
 #Solving the equations for the even case
 dps_value = 100
@@ -27,7 +25,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(100) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -718,7 +716,7 @@ plt.rcParams['contour.negative_linestyle'] = 'solid'
 #plt.title('Streamfunction')
 #fig.add_subplot(1,1,1)
 #plt.contourf(Y,Z,psi,np.arange(-300,305,5),cmap='seismic')
-CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k')
+CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k',linewidths=1.0)
 #plt.clabel(CS, fontsize=9, inline=True)
 #plt.colorbar(label='m/s')
 plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
@@ -741,6 +739,7 @@ ax1.tick_params('both', length=7, width=1, which='minor')
 ax1.minorticks_on()
 ax1.xaxis.set_tick_params(which='minor', bottom=False)
 ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+plt.subplots_adjust(bottom=0.08, top=0.99, hspace=0.1,right=0.97,left=0.13)
 nameoffigure = 'streamlines.png'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
@@ -927,7 +926,11 @@ ax1.tick_params('both', length=10, width=1, which='major')
 plt.grid(True)
 
 
+
 #Plotting the Wstar_real 
+import matplotlib.colors as colors
+import matplotlib.cbook as cbook
+from matplotlib import cm
 
 interval = 10
 boundsl = []
@@ -1005,16 +1008,14 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import numpy as np
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
-import matplotlib.colors as colors
-import matplotlib.cbook as cbook
-from matplotlib import cm
+
 
 dps_value = 100
 
 mp.dps = dps_value
 
 
-K = 70
+K = 110
 alpha = mpf(0.1) 
 visc = mpf(5)     
 diff = mpf(5)     
@@ -1026,7 +1027,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(100) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(400) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
