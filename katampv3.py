@@ -277,7 +277,7 @@ ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 
 nameoffigure = 'buoyancy.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi=300)
 #plt.show()
 plt.close()   
 
@@ -946,13 +946,13 @@ import matplotlib.colors as colors
 import matplotlib.cbook as cbook
 from matplotlib import cm
 
-interval = 10
+interval = 12
 boundsl = []
 for k in range(-interval,interval+1):
     if k < 0:
-        boundsl.append(0.5/interval*k)
+        boundsl.append(0.6/interval*k)
     if k > 0:
-        boundsl.append(5/interval*k)
+        boundsl.append(6/interval*k)
     if k ==0:
         boundsl.append(k)
 bounds = np.array(boundsl)
@@ -1041,7 +1041,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(100) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
