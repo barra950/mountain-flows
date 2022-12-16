@@ -15,17 +15,20 @@ mp.dps = dps_value
 
 K = 70
 alpha = mpf(0.1) 
-visc = mpf(5)     
-diff = mpf(5)     
+visc = mpf(1)     
+diff = mpf(1)     
 N = mpf(0.01)    
-L = mpf(5000)   
+L = mpf(1000)   
 
 subdivisions = 100
 
 pizao = mp.pi(dps=dps_value)
 
+# def H(y):
+#     return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+
 def H(y):
-    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * (y-L/mpf(2))/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -349,7 +352,7 @@ plt.rcParams.update({'font.size':16})
 maxV = np.nanmax(Vplot)
 minV = np.nanmin(Vplot)
 plt.title(r'V$_\max$ = %(number).2f m $\rms^{-1}$        V$_\min$ = %(number2).2f m $\rms^{-1}$' % {"number": maxV, "number2": minV},x=0.5, y=1.02)
-plt.contourf(Yplot,Zplot,Vplot,np.arange(-5,5.5,0.5),cmap='seismic')
+plt.contourf(Yplot,Zplot,Vplot,np.arange(-4,4.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,V,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
 cbar = plt.colorbar()
@@ -475,7 +478,7 @@ plt.rcParams.update({'font.size':16})
 maxU = np.nanmax(Uplot)
 minU = np.nanmin(Uplot)
 plt.title(r'U$_\max$ = %(number).2f m $\rms^{-1}$        U$_\min$ = %(number2).2f m $\rms^{-1}$' % {"number": maxU, "number2": minU},x=0.5, y=1.02)
-plt.contourf(Yplot,Zplot,Uplot,np.arange(-15,16,1),cmap='seismic')
+plt.contourf(Yplot,Zplot,Uplot,np.arange(-14,15,1),cmap='seismic')
 #plt.contourf(Y,Z,U,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
 cbar = plt.colorbar()
@@ -717,7 +720,7 @@ plt.rcParams['contour.negative_linestyle'] = 'solid'
 #plt.title('Streamfunction')
 #fig.add_subplot(1,1,1)
 #plt.contourf(Y,Z,psi,np.arange(-300,305,5),cmap='seismic')
-CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k',linewidths=1.0)
+CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k',linewidths=0.7)
 #plt.clabel(CS, fontsize=9, inline=True)
 #plt.colorbar(label='m/s')
 plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
@@ -743,7 +746,7 @@ ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 plt.subplots_adjust(bottom=0.08, top=0.99, hspace=0.1,right=0.97,left=0.13)
 nameoffigure = 'streamlines.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi = 300)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi = 500)
 #plt.show()
 plt.close()
 
@@ -767,7 +770,7 @@ plt.rcParams.update({'font.size':16})
 
 
 #plt.title('U star plot')
-plt.plot(y,Ustarplot)
+plt.plot(y,Ustarplot,linewidth=2.0)
 plt.xlabel("Y [m]")
 plt.ylabel('U$^{\u2605}_\infty$ [m s$^{-1}$]')
 #plt.xlim([-5000,5000])
@@ -923,7 +926,7 @@ thetaplotf2 = (thetaplot_sign).T
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 ax1.plot([0,0],[0,1500],linewidth=2,color="k")
-ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
+ax1.plot(thetaplotf2[100][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
 plt.xlabel(r"$\rm\theta$ [$\rm^{o}$]")
 plt.ylabel("Z [m]")
 plt.xlim([-0.5,6])
@@ -1032,7 +1035,7 @@ mp.dps = dps_value
 K = 70
 alpha = mpf(0.1) 
 visc = mpf(5)     
-diff = mpf(5)     
+diff = mpf(10)     
 N = mpf(0.01)    
 L = mpf(1000)
 
@@ -1040,8 +1043,11 @@ subdivisions = 100
 
 pizao = mp.pi(dps=dps_value)
 
+# def H(y):
+#     return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+
 def H(y):
-    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * (y-L/mpf(2))/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
