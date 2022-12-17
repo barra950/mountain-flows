@@ -198,7 +198,15 @@ Ak = np.array(Ak)
 
 # for k in range(0,len(Xpost)):
 #     Xpost[k] = float(Xpost[k].real) + float(Xpost[k].imag)*1j
-    
+
+#Setting up the plotting ranges:
+Brange = np.arange(-0.1,0.11,0.01)
+Vrange = np.arange(-4,4.5,0.5)
+Urange = np.arange(-14,15,1)
+Wrange = np.arange(-6.2,6.3,0.2)
+Prange = np.arange(-10,10.5,0.5)
+Ustarrange = np.arange(-14,6,2)
+Ustarylim = [-14,4]
    
 #Getting the Buoyancy value
 
@@ -1034,8 +1042,8 @@ mp.dps = dps_value
 
 K = 70
 alpha = mpf(0.1) 
-visc = mpf(5)     
-diff = mpf(10)     
+visc = mpf(1)     
+diff = mpf(1)     
 N = mpf(0.01)    
 L = mpf(1000)
 
@@ -1047,7 +1055,7 @@ pizao = mp.pi(dps=dps_value)
 #     return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def H(y):
-    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * (y-L/mpf(2))/L)) )
+    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * (y-L/mpf(2))/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -1570,22 +1578,33 @@ for k in range(0,len(B)):
 
     
 ##Plotting the buoyancy
-fig = plt.figure(figsize=(10,10)) # create a figure
+fig,ax1 = plt.subplots(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
-plt.title(r'B$_\max$ 5 $\rmms^{-2}$        B$_\min$ 5 $\rmms^{-2}$',x=0.5, y=1.02)
+maxB = np.nanmax(Bplot)
+minB = np.nanmin(Bplot)
+plt.title(r'B$_\max$ = %(number).2f m $\rms^{-2}$        B$_\min$ = %(number2).2f m $\rms^{-2}$' % {"number": maxB, "number2": minB},x=0.5, y=1.02)
 plt.contourf(Yplot,Zplot,Bplot,np.arange(-0.1,0.11,0.01),cmap='seismic')
 #plt.contourf(Y,Z,B,cmap='seismic')
 #plt.colorbar(label='[$ms^{-2}$]')
-plt.colorbar()
-plt.xlabel("Y axis [m]")
-plt.ylabel("Height [m]")
+cbar = plt.colorbar(ticks=np.arange(-0.1,0.12,0.02))
+cbar.ax.tick_params(length=14, width=1)
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
+
+ax1.tick_params('both', length=14, width=1, which='major')
+ax1.tick_params('both', length=7, width=1, which='minor')
+
+ax1.minorticks_on()
+ax1.xaxis.set_tick_params(which='minor', bottom=False)
+ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
+
 nameoffigure = 'buoyancy.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi=300)
 #plt.show()
-plt.close()
+plt.close()   
 
 
 
@@ -1648,11 +1667,14 @@ for k in range(0,len(V)):
 ##Plotting the V wind
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title(r'V$_\max$ = 5 m $\rms^{-2}$        V$_\min$ = 5 m $\rms^{-2}$',x=0.5, y=1.02)
-plt.contourf(Yplot,Zplot,Vplot,np.arange(-7,7.03,0.03),cmap='seismic')
+maxV = np.nanmax(Vplot)
+minV = np.nanmin(Vplot)
+plt.title(r'V$_\max$ = %(number).2f m $\rms^{-1}$        V$_\min$ = %(number2).2f m $\rms^{-1}$' % {"number": maxV, "number2": minV},x=0.5, y=1.02)
+plt.contourf(Yplot,Zplot,Vplot,np.arange(-4,4.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,V,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.ax.tick_params(length=14, width=1)
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
@@ -1666,7 +1688,7 @@ ax1.xaxis.set_tick_params(which='minor', bottom=False)
 ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 nameoffigure = 'Vwind.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi=300)
 #plt.show()
 plt.close()  
 
@@ -1779,15 +1801,19 @@ for k in range(0,len(U)):
 #Plotting the U wind
 fig,ax1 = plt.subplots(figsize=(10,10)) # create a figure
 plt.rcParams.update({'font.size':16})
-plt.title(r'U$_\max$ = 5 m $\rms^{-1}$        U$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
-plt.contourf(Yplot,Zplot,Uplot,np.arange(-25,26,1),cmap='seismic')
+maxU = np.nanmax(Uplot)
+minU = np.nanmin(Uplot)
+plt.title(r'U$_\max$ = %(number).2f m $\rms^{-1}$        U$_\min$ = %(number2).2f m $\rms^{-1}$' % {"number": maxU, "number2": minU},x=0.5, y=1.02)
+plt.contourf(Yplot,Zplot,Uplot,np.arange(-14,15,1),cmap='seismic')
 #plt.contourf(Y,Z,U,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.ax.tick_params(length=14, width=1)
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([-float(L),float(L)])
 plt.ylim([0,1500])
+
 
 ax1.tick_params('both', length=14, width=1, which='major')
 ax1.tick_params('both', length=7, width=1, which='minor')
@@ -1797,7 +1823,7 @@ ax1.xaxis.set_tick_params(which='minor', bottom=False)
 ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 nameoffigure = 'Uwind.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi=300)
 #plt.show()
 plt.close()
 
@@ -1859,11 +1885,14 @@ for k in range(0,len(W)):
 ##Plotting the W wind
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title(r'W$_\max$ = 5 m $\rms^{-1}$        W$_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
-plt.contourf(Yplot,Zplot,Wplot,np.arange(-6,6.2,0.2),cmap='seismic')
+maxW = np.nanmax(Wplot)
+minW = np.nanmin(Wplot)
+plt.title(r'W$_\max$ = %(number).2f m $\rms^{-1}$        W$_\min$ = %(number2).2f m $\rms^{-1}$' % {"number": maxW, "number2": minW},x=0.5, y=1.02)
+plt.contourf(Yplot,Zplot,Wplot,np.arange(-6.2,6.3,0.2),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.ax.tick_params(length=14, width=1)
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 plt.xlim([float(-L),float(L)])
@@ -1877,7 +1906,7 @@ ax1.xaxis.set_tick_params(which='minor', bottom=False)
 ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 nameoffigure = 'Wwind.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi=300)
 #plt.show()
 plt.close()
 
@@ -1935,10 +1964,13 @@ for k in range(0,len(P)):
 ##Plotting the pressure
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-plt.title(r'$\Pi_\max$ = 5 $\rmm^{2}$ $\rms^{-2}$        $\Pi_\min$ = 5 $\rmm^{2}$ $\rms^{-2}$',x=0.5, y=1.02)
-plt.contourf(Yplot,Zplot,Pplot,np.arange(-15,15.5,0.5),cmap='seismic')
+maxP = np.nanmax(Pplot)
+minP = np.nanmin(Pplot)
+plt.title(r'$\Pi_\max$ = %(number).2f $\rmm^{2}$ $\rms^{-2}$        $\Pi_\min$ = %(number2).2f $\rmm^{2}$ $\rms^{-2}$' % {"number": maxP, "number2": minP},x=0.5, y=1.02)
+plt.contourf(Yplot,Zplot,Pplot,np.arange(-10,10.5,0.5),cmap='seismic')
 #plt.contourf(Y,Z,P,cmap='seismic')
-plt.colorbar()
+cbar = plt.colorbar()
+cbar.ax.tick_params(length=14, width=1)
 plt.xlabel("Y [m]")
 plt.ylabel("Z [m]")
 #plt.xlim([-10000,10000])
@@ -1953,7 +1985,7 @@ ax1.xaxis.set_tick_params(which='minor', bottom=False)
 ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 nameoffigure = 'pressure.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi=300)
 plt.show()
 plt.close()
 
@@ -2020,16 +2052,18 @@ for k in range(0,len(psi)):
 
 
 ##Plotting the streamlines
-fig,ax1 = plt.subplots(figsize=(20,20)) 
+fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 plt.rcParams['contour.negative_linestyle'] = 'solid'
 #plt.title('Streamfunction')
 #fig.add_subplot(1,1,1)
 #plt.contourf(Y,Z,psi,np.arange(-300,305,5),cmap='seismic')
-CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k')
+CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k',linewidths=0.7)
 #plt.clabel(CS, fontsize=9, inline=True)
 #plt.colorbar(label='m/s')
 plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
+plt.xlabel("Y [m]")
+plt.ylabel("Z [m]")
 #plt.contourf(Y,Z,psi,cmap='seismic')
 jk = 20
 # q = plt.quiver(Yplot[::jk,::jk],Zplot[::jk,::jk],Vplot[::jk,::jk],Wplot[::jk,::jk],scale=50,angles="xy")
@@ -2047,10 +2081,10 @@ ax1.tick_params('both', length=7, width=1, which='minor')
 ax1.minorticks_on()
 ax1.xaxis.set_tick_params(which='minor', bottom=False)
 ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
-plt.subplots_adjust(bottom=0.07, top=0.99, hspace=0.1,right=0.98,left=0.05)
+plt.subplots_adjust(bottom=0.08, top=0.99, hspace=0.1,right=0.97,left=0.13)
 nameoffigure = 'streamlines.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi = 500)
 #plt.show()
 plt.close()
 
@@ -2069,41 +2103,25 @@ for t in range(0,len(y)):
     Ustarplot[t] = float(Ustar[t].real)
 
         
-##Plotting U* and streamlines
+##Plotting U* infinity
 fig = plt.figure(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 
 
-fig.add_subplot(2,1,1)
 #plt.title('U star plot')
-plt.plot(y,Ustarplot)
+plt.plot(y,Ustarplot,linewidth=2.0)
 plt.xlabel("Y [m]")
 plt.ylabel('U$^{\u2605}_\infty$ [m s$^{-1}$]')
 #plt.xlim([-5000,5000])
 plt.xlim([float(-L),float(L)])
 #plt.ylim([-6,2])
-plt.ylim([-18,10])
+plt.ylim([-14,4])
+plt.yticks(np.arange(-14,6,2))
 plt.grid('True')
 
-fig.add_subplot(2,1,2)
-#CS = plt.contour(Y,Z,psi,50,colors='k')
-CS = plt.contour(Yplot,Zplot,psiplot,30,colors='k')
-#plt.clabel(CS, fontsize=9, inline=True)
-#plt.colorbar(label='m/s')
-plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
-#plt.contourf(Y,Z,psi,cmap='seismic')
-#jk = 20
-#q = plt.quiver(Y[::jk,::jk],Z[::jk,::jk],V[::jk,::jk],W[::jk,::jk],scale=50,angles="xy")
-#plt.quiverkey(q, 1.03, 1.03, 2, label='2m/s')
-#plt.streamplot(Y,Z,V,W,density = 3,arrowstyle='->',arrowsize = 1.5)
-plt.xlabel("Y [m]")
-plt.ylabel("Z [m]")
-#plt.xlim([-5000,5000])
-plt.xlim([float(-L),float(L)])
-plt.ylim([0,1500])
 nameoffigure = 'Ustar.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi=300)
 #plt.show()
 plt.close()
 
@@ -2243,7 +2261,8 @@ thetaplotf = (thetaplot).T
 thetaplotf2 = (thetaplot_sign).T 
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
-ax1.plot(thetaplotf2[50][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
+ax1.plot([0,0],[0,1500],linewidth=2,color="k")
+ax1.plot(thetaplotf2[100][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
 plt.xlabel(r"$\rm\theta$ [$\rm^{o}$]")
 plt.ylabel("Z [m]")
 plt.xlim([-0.5,6])
@@ -2253,16 +2272,25 @@ ax1.set_yticks(np.arange(0,1600,100))
 ax1.tick_params('both', length=10, width=1, which='major')
 plt.grid(True)
 
+nameoffigure = 'theta.png'
+string_in_string = "{}".format(nameoffigure)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi=300)
+#plt.show()
+plt.close()
+
 
 #Plotting the Wstar_real 
+import matplotlib.colors as colors
+import matplotlib.cbook as cbook
+from matplotlib import cm
 
-interval = 10
+interval = 12
 boundsl = []
 for k in range(-interval,interval+1):
     if k < 0:
-        boundsl.append(0.5/interval*k)
+        boundsl.append(0.6/interval*k)
     if k > 0:
-        boundsl.append(7/interval*k)
+        boundsl.append(6/interval*k)
     if k ==0:
         boundsl.append(k)
 bounds = np.array(boundsl)
@@ -2285,8 +2313,10 @@ for k in range(0,len(Wstar_real)):
 
 Wstarplot = Wstar_realplot
 fig, ax1 = plt.subplots(figsize=(10,10)) 
-plt.title(r'W$^{\bigstar}_\max$ = 5 m $\rms^{-1}$        W$^{\bigstar}_\min$ = 5 m $\rms^{-1}$',x=0.5, y=1.02)
 plt.rcParams.update({'font.size':16})
+maxWstar = np.nanmax(Wstarplot)
+minWstar = np.nanmin(Wstarplot)
+plt.title(r'W$^{\bigstar}_\max$ = %(number).2f m $\rms^{-1}$        W$^{\bigstar}_\min$ = %(number2).2f m $\rms^{-1}$' % {"number": maxWstar, "number2": minWstar},x=0.5, y=1.02)
 
 norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
 
@@ -2311,7 +2341,7 @@ ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 
 nameoffigure = 'Wstar.png'
 string_in_string = "{}".format(nameoffigure)
-plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string)
+plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi=300)
 #plt.show()
 plt.close()
 
@@ -2326,9 +2356,7 @@ import matplotlib.pyplot as plt
 from scipy.integrate import quad
 import numpy as np
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
-import matplotlib.colors as colors
-import matplotlib.cbook as cbook
-from matplotlib import cm
+
 
 dps_value = 100
 
@@ -2347,7 +2375,7 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(250) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 
 def Bsfc(y):
