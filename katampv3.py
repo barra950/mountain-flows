@@ -773,7 +773,7 @@ for t in range(0,len(y)):
 
         
 ##Plotting U* infinity
-fig = plt.figure(figsize=(10,10)) 
+fig,ax1=plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 
 
@@ -782,10 +782,11 @@ plt.plot(y,Ustarplot,linewidth=2.0)
 plt.xlabel("Y [m]")
 plt.ylabel('U$^{\u2605}_\infty$ [m s$^{-1}$]')
 #plt.xlim([-5000,5000])
-plt.xlim([float(-L),float(L)])
+ax1.set_xlim([float(-L),float(L)])
 #plt.ylim([-6,2])
-plt.ylim([-14,4])
+ax1.set_ylim([-14,4])
 plt.yticks(np.arange(-14,6,2))
+ax1.tick_params('both', length=10, width=1, which='major')
 plt.grid('True')
 
 nameoffigure = 'Ustar.png'
@@ -893,16 +894,20 @@ ax1.set_ylim([-0.02,0.1])
 plt.xlabel('Z [m]',name='Arial')
 plt.ylabel(r'B [m $\rms^{-2}$]',name='Arial')
 plt.plot(z,Bpplot2[0][:],linewidth=3,color='b',label='B')
+plt.plot([0,100000],[0,0],linewidth=3,color='b',linestyle='dashed')
 ax1.tick_params('both', length=10, width=1, which='major')
 ax2=ax1.twinx()
 ax2.set_ylim([-4,4])
 plt.plot(z,Upplot2[0][:],linewidth=3,color='r',label='U')
+plt.plot([0,100000],[0,0],linewidth=3,color='r',linestyle='dashed')
 plt.ylabel(r'U [m $\rms^{-1}$]',name='Arial')
 ax1.set_xlim([0,1000])
 ax1.set_xticks(np.arange(0,1100,100))
-ax2.tick_params('both', length=10, width=1, which='major')
+ax2.tick_params('both', length=10, width=1, which='major', pad=10)
 ax1.legend(bbox_to_anchor=(0.7, 0.95), loc='upper left', borderaxespad=0)
 ax2.legend(bbox_to_anchor=(0.7, 0.88), loc='upper left', borderaxespad=0)
+
+
 
 nameoffigure = 'prandtl.png'
 string_in_string = "{}".format(nameoffigure)
@@ -1040,10 +1045,10 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 70
+K = 100
 alpha = mpf(0.1) 
-visc = mpf(1)     
-diff = mpf(1)     
+visc = mpf(5)     
+diff = mpf(5)     
 N = mpf(0.01)    
 L = mpf(1000)
 
