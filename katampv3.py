@@ -13,7 +13,7 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 70
+K = 100
 alpha = mpf(0.1) 
 visc = mpf(1)     
 diff = mpf(1)     
@@ -577,7 +577,7 @@ plt.rcParams.update({'font.size':16})
 maxW = np.nanmax(Wplot)
 minW = np.nanmin(Wplot)
 plt.title(r'W$_\max$ = $%(number).2f$ m $\rms^{-1}$        W$_\min$ = $%(number2).2f$ m $\rms^{-1}$' % {"number": maxW, "number2": minW},x=0.5, y=1.02)
-plt.contourf(Yplot,Zplot,Wplot,np.arange(-6.2,6.3,0.2),cmap='seismic')
+plt.contourf(Yplot,Zplot,Wplot,np.arange(-3,3.25,0.25),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
 cbar = plt.colorbar()
@@ -784,8 +784,8 @@ plt.ylabel('U$^{\u2605}_\infty$ [m s$^{-1}$]')
 #plt.xlim([-5000,5000])
 ax1.set_xlim([float(-L),float(L)])
 #plt.ylim([-6,2])
-ax1.set_ylim([-14,4])
-plt.yticks(np.arange(-14,6,2))
+ax1.set_ylim([-12,4])
+plt.yticks(np.arange(-12,6,2))
 ax1.tick_params('both', length=10, width=1, which='major')
 plt.grid('True')
 
@@ -939,7 +939,7 @@ thetaplotf2 = (thetaplot_sign).T
 fig,ax1 = plt.subplots(figsize=(10,10)) 
 plt.rcParams.update({'font.size':16})
 ax1.plot([0,0],[0,1500],linewidth=2,color="k")
-ax1.plot(thetaplotf2[100][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
+ax1.plot(thetaplotf2[0][1:],z[1:],linewidth=3,color="r") #Number might depends on how many points y has
 plt.xlabel(r"$\rm\theta$ [$\rm^{o}$]")
 plt.ylabel("Z [m]")
 plt.xlim([-0.5,6])
@@ -966,9 +966,9 @@ interval = 12
 boundsl = []
 for k in range(-interval,interval+1):
     if k < 0:
-        boundsl.append(0.6/interval*k)
+        boundsl.append(0.3/interval*k)
     if k > 0:
-        boundsl.append(6/interval*k)
+        boundsl.append(3/interval*k)
     if k ==0:
         boundsl.append(k)
 bounds = np.array(boundsl)
@@ -1065,8 +1065,8 @@ def H(y):
 def Bsfc(y):
     return mpf(0.1)
 
-z = np.arange(0,2010,10) 
-y = np.arange(-float(L),float(L)+10,10) 
+z = np.arange(0,2001,1) 
+y = np.arange(-float(L),float(L)+5,5) 
 Y,Z = np.meshgrid(y,z)
 Y = Y * mpf(1)
 Z = Z * mpf(1)
@@ -1194,8 +1194,8 @@ with open('/home/owner/Documents/katabatic_flows/variables/V.pickle', 'rb') as h
     V = pickle.load(handle)
     
 
-with open('/home/owner/Documents/katabatic_flows/variables/VlargeY.pickle', 'rb') as handle:
-    V = pickle.load(handle)
+# with open('/home/owner/Documents/katabatic_flows/variables/VlargeY.pickle', 'rb') as handle:
+#     V = pickle.load(handle)
     
 
 with open('/home/owner/Documents/katabatic_flows/variables/U.pickle', 'rb') as handle:
@@ -1214,8 +1214,8 @@ with open('/home/owner/Documents/katabatic_flows/variables/W.pickle', 'rb') as h
     W = pickle.load(handle)
 
 
-with open('/home/owner/Documents/katabatic_flows/variables/WlargeY.pickle', 'rb') as handle:
-    W = pickle.load(handle)
+# with open('/home/owner/Documents/katabatic_flows/variables/WlargeY.pickle', 'rb') as handle:
+#     W = pickle.load(handle)
 
 
 with open('/home/owner/Documents/katabatic_flows/variables/P.pickle', 'rb') as handle:
@@ -1893,7 +1893,7 @@ plt.rcParams.update({'font.size':16})
 maxW = np.nanmax(Wplot)
 minW = np.nanmin(Wplot)
 plt.title(r'W$_\max$ = %(number).2f m $\rms^{-1}$        W$_\min$ = %(number2).2f m $\rms^{-1}$' % {"number": maxW, "number2": minW},x=0.5, y=1.02)
-plt.contourf(Yplot,Zplot,Wplot,np.arange(-6.2,6.3,0.2),cmap='seismic')
+plt.contourf(Yplot,Zplot,Wplot,np.arange(-3,3.25,0.25),cmap='seismic')
 #plt.contourf(Y,Z,W,cmap='seismic')
 #plt.colorbar(label='[$ms^{-1}$]')
 cbar = plt.colorbar()
@@ -2120,7 +2120,7 @@ plt.ylabel('U$^{\u2605}_\infty$ [m s$^{-1}$]')
 #plt.xlim([-5000,5000])
 plt.xlim([float(-L),float(L)])
 #plt.ylim([-6,2])
-plt.ylim([-14,4])
+plt.ylim([-12,4])
 plt.yticks(np.arange(-14,6,2))
 plt.grid('True')
 
@@ -2295,9 +2295,9 @@ interval = 12
 boundsl = []
 for k in range(-interval,interval+1):
     if k < 0:
-        boundsl.append(0.6/interval*k)
+        boundsl.append(0.3/interval*k)
     if k > 0:
-        boundsl.append(6/interval*k)
+        boundsl.append(3/interval*k)
     if k ==0:
         boundsl.append(k)
 bounds = np.array(boundsl)
@@ -2370,7 +2370,7 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 70
+K = 100
 alpha = mpf(0.1) 
 visc = mpf(5)     
 diff = mpf(5)     
@@ -2382,14 +2382,14 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 
 def Bsfc(y):
     return mpf(0.1) * mp.sin(mpf(2) * pizao * y/L)
 
-z = np.arange(0,2010,10) 
-y = np.arange(-float(L),float(L)+10,10) 
+z = np.arange(0,2001,1) 
+y = np.arange(-float(L),float(L)+5,5) 
 Y,Z = np.meshgrid(y,z)
 Y = Y * mpf(1)
 Z = Z * mpf(1)
