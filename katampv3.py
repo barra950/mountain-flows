@@ -728,7 +728,7 @@ plt.rcParams['contour.negative_linestyle'] = 'solid'
 #plt.title('Streamfunction')
 #fig.add_subplot(1,1,1)
 #plt.contourf(Y,Z,psi,np.arange(-300,305,5),cmap='seismic')
-CS = plt.contour(Yplot,Zplot,psiplot,50,colors='k',linewidths=0.7)
+plt.contour(Yplot,Zplot,psiplot,15,colors='k',linewidths=0.7,antialiased=True)
 #plt.clabel(CS, fontsize=9, inline=True)
 #plt.colorbar(label='m/s')
 plt.contourf(Yplot,Zplot,Uplot,np.arange(-100000,110000,10000),cmap='seismic')
@@ -752,7 +752,7 @@ ax1.minorticks_on()
 ax1.xaxis.set_tick_params(which='minor', bottom=False)
 ax1.yaxis.set_minor_locator(AutoMinorLocator(2))
 plt.subplots_adjust(bottom=0.08, top=0.99, hspace=0.1,right=0.97,left=0.13)
-nameoffigure = 'streamlines.png'
+nameoffigure = 'streamlines.pdf'
 string_in_string = "{}".format(nameoffigure)
 plt.savefig('/home/owner/Documents/katabatic_flows/output/'+string_in_string,dpi = 500)
 #plt.show()
@@ -962,7 +962,7 @@ import matplotlib.colors as colors
 import matplotlib.cbook as cbook
 from matplotlib import cm
 
-interval = 12
+interval = 15
 boundsl = []
 for k in range(-interval,interval+1):
     if k < 0:
@@ -1060,7 +1060,7 @@ pizao = mp.pi(dps=dps_value)
 #     return ( mpf(200) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
 
 def H(y):
-    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * (y-L/mpf(2))/L)) )
+    return ( mpf(100) * (mpf(1) + mp.cos(mpf(2) * pizao * (y-L/mpf(2))/L)) )
 
 def Bsfc(y):
     return mpf(0.1)
@@ -1363,7 +1363,7 @@ dps_value = 100
 mp.dps = dps_value
 
 
-K = 70
+K = 2
 alpha = mpf(0.1) 
 visc = mpf(5)     
 diff = mpf(5)     
@@ -1374,8 +1374,12 @@ subdivisions = 100
 
 pizao = mp.pi(dps=dps_value)
 
+# def H(y):
+#     return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+
+
 def H(y):
-    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * (y-L/mpf(2))/L)) )
 
 
 def Bsfc(y):
@@ -1529,7 +1533,7 @@ Ek = np.array(Ek)
 
 #Getting the Buoyancy value
 
-z = np.arange(0,2001,1) 
+z = np.arange(0,2010,10) 
 y = np.arange(-float(L),float(L)+10,10) 
 Y,Z = np.meshgrid(y,z)
 Y = Y * mpf(1)
@@ -2260,7 +2264,7 @@ for k in range(0,len(theta)):
     for t in range(0,len(theta[0])):
         thetaplot[k][t] = float(theta[k][t].real) #+ 1j*float(theta[k][t].imag)
         # thetaplot_sign[k][t] = float(theta[k][t].real * abs(Wstar_real[k][t].real)/Wstar_real[k][t].real)
-        thetaplot_sign[k][t] = np.sign(float(theta[k][t].real)) * float(theta[k][t].real)
+        thetaplot_sign[k][t] = np.sign(float(Wstar_real[k][t].real)) * float(theta[k][t].real)
         
         
 #Plotting the theta angle vs height at y=0 
@@ -2382,11 +2386,12 @@ subdivisions = 100
 pizao = mp.pi(dps=dps_value)
 
 def H(y):
-    return ( mpf(300) * (mpf(1) + mp.cos(mpf(2) * pizao * y/L)) )
+    return ( mpf(100) * (mpf(1) + mp.cos(mpf(2) * pizao * (y-L/mpf(2))/L)) )
 
 
 def Bsfc(y):
     return mpf(0.1) * mp.sin(mpf(2) * pizao * y/L)
+
 
 z = np.arange(0,2001,1) 
 y = np.arange(-float(L),float(L)+5,5) 
@@ -2517,8 +2522,8 @@ with open('/home/owner/Documents/katabatic_flows/variables/V.pickle', 'rb') as h
     V = pickle.load(handle)
     
 
-with open('/home/owner/Documents/katabatic_flows/variables/VlargeY.pickle', 'rb') as handle:
-    V = pickle.load(handle)
+# with open('/home/owner/Documents/katabatic_flows/variables/VlargeY.pickle', 'rb') as handle:
+#     V = pickle.load(handle)
     
 
 with open('/home/owner/Documents/katabatic_flows/variables/U.pickle', 'rb') as handle:
@@ -2537,8 +2542,8 @@ with open('/home/owner/Documents/katabatic_flows/variables/W.pickle', 'rb') as h
     W = pickle.load(handle)
 
 
-with open('/home/owner/Documents/katabatic_flows/variables/WlargeY.pickle', 'rb') as handle:
-    W = pickle.load(handle)
+# with open('/home/owner/Documents/katabatic_flows/variables/WlargeY.pickle', 'rb') as handle:
+#     W = pickle.load(handle)
 
 
 with open('/home/owner/Documents/katabatic_flows/variables/P.pickle', 'rb') as handle:
